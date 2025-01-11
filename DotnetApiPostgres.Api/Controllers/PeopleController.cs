@@ -1,5 +1,6 @@
 using DotnetApiPostgres.Api.Mappings;
-using DotnetApiPostgres.Api.Models.DTO;
+using DotnetApiPostgres.Api.Models.DTOs;
+using DotnetApiPostgres.Api.Models.Entities;
 using DotnetApiPostgres.Api.Repository;
 using DotnetApiPostgres.Api.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -45,7 +46,7 @@ public class PeopleController : ControllerBase
         }
         try
         {
-            GetPersonDto? person = await _personService.FindPersonByIdAsync(id);
+            GetPersonDTO? person = await _personService.FindPersonByIdAsync(id);
             if (person == null)
             {
                 return NotFound();
@@ -65,7 +66,7 @@ public class PeopleController : ControllerBase
     {
         try
         {
-            GetPersonDto? person = await _personService.FindPersonByIdAsync(id);
+            GetPersonDTO? person = await _personService.FindPersonByIdAsync(id);
             if (person == null)
             {
                 return NotFound();
@@ -84,7 +85,7 @@ public class PeopleController : ControllerBase
     {
         try
         {
-            IEnumerable<GetPersonDto> peoples = await _personService.GetPeopleAsync();
+            IEnumerable<GetPersonDTO> peoples = await _personService.GetPeopleAsync();
             return Ok(peoples);
         }
         catch (Exception ex)
@@ -99,12 +100,12 @@ public class PeopleController : ControllerBase
     {
         try
         {
-            GetPersonDto? person = await _personService.FindPersonByIdAsync(id);
+            GetPersonDTO? person = await _personService.FindPersonByIdAsync(id);
             if (person == null)
             {
                 return NotFound();
             }
-            await _personService.DeletePersonAsync(GetPersonDto.ToPerson(person));
+            await _personService.DeletePersonAsync(GetPersonDTO.ToPerson(person));
             return NoContent();
         }
         catch (Exception ex)
@@ -117,7 +118,7 @@ public class PeopleController : ControllerBase
     // V2
 
     [HttpPost]
-    public async Task<ActionResult<GetPersonDto>> AddPersonV2(CreatePersonDTO personToCreate)
+    public async Task<ActionResult<GetPersonDTO>> AddPersonV2(CreatePersonDTO personToCreate)
     {
         var person = personToCreate.ToPerson();
         person = await _repository.AddAsync(person);
@@ -125,7 +126,7 @@ public class PeopleController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<GetPersonDto?>> GetPersonV2(int id)
+    public async Task<ActionResult<GetPersonDTO?>> GetPersonV2(int id)
     {
         var person = await _repository.FindByIdAsync(id);
         if (person == null)
@@ -134,7 +135,7 @@ public class PeopleController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<GetPersonDto>>> GetAllPeopleV2()
+    public async Task<ActionResult<IEnumerable<GetPersonDTO>>> GetAllPeopleV2()
     {
         var people = await _repository.GetAllAsync();
         return Ok(people.Select(p => p.ToGetPersonDto()));

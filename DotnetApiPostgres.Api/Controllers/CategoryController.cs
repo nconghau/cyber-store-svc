@@ -1,9 +1,11 @@
 using DotnetApiPostgres.Api.Mappings;
 using DotnetApiPostgres.Api.Models.Common;
-using DotnetApiPostgres.Api.Models.DTO;
+using DotnetApiPostgres.Api.Models.DTOs;
+using DotnetApiPostgres.Api.Models.Entities;
 using DotnetApiPostgres.Api.Repository;
 using DotnetApiPostgres.Api.Utils;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DotnetApiPostgres.Api.Models;
 
@@ -63,6 +65,9 @@ public class CategoryController : ControllerBase
             }
         };
         var initDataResult = new List<Category>();
+
+        await _repository.DeleteAsync(f => true);
+
         foreach (var data in initData)
         {
             var category = await _repository.AddAsync(data.ToCategory());
@@ -77,8 +82,15 @@ public class CategoryController : ControllerBase
     [HttpGet]
     public async Task<JsonResponse<List<CategoryDto>>> GetAllCategory()
     {
-        var category = await _repository.GetAllAsync();
-        var response = new JsonResponse<List<CategoryDto>>(true, category.Select(p => p.ToCategoryDto()).ToList());
+        var categories = await _repository.GetAllAsync();
+        var response = new JsonResponse<List<CategoryDto>>(true, categories.Select(p => p.ToCategoryDto()).ToList());
+        return response;
+    }
+
+    [HttpPost]
+    public async Task<PostgresDataSource<Category>> GetCategoryByQuery([FromBody] PostgresQuery query)
+    {
+        var response = await _repository.GetByQueryAsync(query);
         return response;
     }
 

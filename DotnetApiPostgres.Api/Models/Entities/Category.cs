@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DotnetApiPostgres.Api.Models.DTO;
+using DotnetApiPostgres.Api.Models.DTOs;
 
-namespace DotnetApiPostgres.Api.Models;
+namespace DotnetApiPostgres.Api.Models.Entities;
 
 [Table("Category")]
 public class Category

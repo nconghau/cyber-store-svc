@@ -1,4 +1,6 @@
-namespace DotnetApiPostgres.Api.Models.DTO;
+using DotnetApiPostgres.Api.Models.Entities;
+
+namespace DotnetApiPostgres.Api.Models.DTOs;
 
 public class CategoryDto
 {

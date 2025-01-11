@@ -1,5 +1,6 @@
 using DotnetApiPostgres.Api;
 using DotnetApiPostgres.Api.Models;
+using DotnetApiPostgres.Api.Models.Entities;
 using DotnetApiPostgres.Api.Repository;
 using DotnetApiPostgres.Api.Services;
 using Microsoft.EntityFrameworkCore;

@@ -1,11 +1,13 @@
-namespace DotnetApiPostgres.Api.Models.DTO;
+using DotnetApiPostgres.Api.Models.Entities;
 
-public class GetPersonDto
+namespace DotnetApiPostgres.Api.Models.DTOs;
+
+public class GetPersonDTO
 {
     public int Id { get; set; }
     public required string Name { get; set; }
 
-    public static Person ToPerson(GetPersonDto getPersonDto)
+    public static Person ToPerson(GetPersonDTO getPersonDto)
     {
         return new Person
         {

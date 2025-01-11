@@ -1,9 +1,9 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DotnetApiPostgres.Api.Models.DTO;
+using DotnetApiPostgres.Api.Models.DTOs;
 
-namespace DotnetApiPostgres.Api.Models;
+namespace DotnetApiPostgres.Api.Models.Entities;
 
 [Table("Person")]
 public class Person
@@ -14,9 +14,9 @@ public class Person
     [Required]
     public required string Name { get; set; }
 
-    public static GetPersonDto ToGetPersonDto(Person person)
+    public static GetPersonDTO ToGetPersonDto(Person person)
     {
-        return new GetPersonDto
+        return new GetPersonDTO
         {
             Id = person.Id,
             Name = person.Name

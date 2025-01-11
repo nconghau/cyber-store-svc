@@ -1,13 +1,14 @@
 ﻿using DotnetApiPostgres.Api.Models;
-using DotnetApiPostgres.Api.Models.DTO;
+using DotnetApiPostgres.Api.Models.DTOs;
+using DotnetApiPostgres.Api.Models.Entities;
 
 namespace DotnetApiPostgres.Api.Mappings;
 
 public static class PersonMappings
 {
-    public static GetPersonDto ToGetPersonDto(this Person person)
+    public static GetPersonDTO ToGetPersonDto(this Person person)
     {
-        return new GetPersonDto
+        return new GetPersonDTO
         {
             Id = person.Id,
             Name = person.Name

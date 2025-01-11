@@ -1,16 +1,17 @@
 using DotnetApiPostgres.Api.Models;
-using DotnetApiPostgres.Api.Models.DTO;
+using DotnetApiPostgres.Api.Models.DTOs;
+using DotnetApiPostgres.Api.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotnetApiPostgres.Api.Services;
 
 public interface IPersonService
 {
-    Task<GetPersonDto> AddPersonAsync(CreatePersonDTO personToCreate);
+    Task<GetPersonDTO> AddPersonAsync(CreatePersonDTO personToCreate);
     Task UpdatePersonAsync(UpdatePersonDTO personToUpdate);
     Task DeletePersonAsync(Person person);
-    Task<GetPersonDto?> FindPersonByIdAsync(int id);
-    Task<IEnumerable<GetPersonDto>> GetPeopleAsync();
+    Task<GetPersonDTO?> FindPersonByIdAsync(int id);
+    Task<IEnumerable<GetPersonDTO>> GetPeopleAsync();
 }
 
 public sealed class PersonService : IPersonService
@@ -22,7 +23,7 @@ public sealed class PersonService : IPersonService
         _context = context;
     }
 
-    public async Task<GetPersonDto> AddPersonAsync(CreatePersonDTO personToCreate)
+    public async Task<GetPersonDTO> AddPersonAsync(CreatePersonDTO personToCreate)
     {
         Person person = CreatePersonDTO.ToPerson(personToCreate);
         _context.People.Add(person);
@@ -36,7 +37,7 @@ public sealed class PersonService : IPersonService
         await _context.SaveChangesAsync();
     }
 
-    public async Task<GetPersonDto?> FindPersonByIdAsync(int id)
+    public async Task<GetPersonDTO?> FindPersonByIdAsync(int id)
     {
         Person? person = await _context.People.Where(x => x.Id == id).AsNoTracking().FirstOrDefaultAsync();
         if (person == null)
@@ -46,7 +47,7 @@ public sealed class PersonService : IPersonService
         return Person.ToGetPersonDto(person);
     }
 
-    public async Task<IEnumerable<GetPersonDto>> GetPeopleAsync()
+    public async Task<IEnumerable<GetPersonDTO>> GetPeopleAsync()
     {
         IEnumerable<Person> people = await _context.People.AsNoTracking().ToListAsync();
         return people.Select(Person.ToGetPersonDto);

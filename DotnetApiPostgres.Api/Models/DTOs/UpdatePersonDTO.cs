@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using DotnetApiPostgres.Api.Models.Entities;
 
-namespace DotnetApiPostgres.Api.Models.DTO;
+namespace DotnetApiPostgres.Api.Models.DTOs;
 
 public class UpdatePersonDTO
 {
