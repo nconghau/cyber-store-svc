@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
@@ -16,4 +18,18 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Migrations\" />
+    <None Remove="Repository\" />
+    <None Remove="Mappings\" />
+    <None Remove="Utils\" />
+    <None Remove="Models\Common\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+    <Folder Include="Repository\" />
+    <Folder Include="Mappings\" />
+    <Folder Include="Utils\" />
+    <Folder Include="Models\Common\" />
+  </ItemGroup>
 </Project>

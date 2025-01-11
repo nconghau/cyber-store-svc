@@ -12,6 +12,19 @@ namespace DotnetApiPostgres.Api.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Category",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "varchar(24)", nullable: false),
+                    Name = table.Column<string>(type: "varchar(30)", nullable: false),
+                    IconUrl = table.Column<string>(type: "varchar(100)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Category", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Person",
                 columns: table => new
                 {
@@ -28,6 +41,9 @@ namespace DotnetApiPostgres.Api.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Category");
+
             migrationBuilder.DropTable(
                 name: "Person");
         }

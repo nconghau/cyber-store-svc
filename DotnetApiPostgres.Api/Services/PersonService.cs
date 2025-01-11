@@ -12,6 +12,7 @@ public interface IPersonService
     Task<GetPersonDto?> FindPersonByIdAsync(int id);
     Task<IEnumerable<GetPersonDto>> GetPeopleAsync();
 }
+
 public sealed class PersonService : IPersonService
 {
     private readonly ApplicationDbContext _context;

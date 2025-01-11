@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotnetApiPostgres.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240814075452_init")]
-    partial class init
+    [Migration("20250111105958_UpdateColumnLengths")]
+    partial class UpdateColumnLengths
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,24 @@ namespace DotnetApiPostgres.Api.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("DotnetApiPostgres.Api.Models.Category", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(24)");
+
+                    b.Property<string>("IconUrl")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Category");
+                });
 
             modelBuilder.Entity("DotnetApiPostgres.Api.Models.Person", b =>
                 {
