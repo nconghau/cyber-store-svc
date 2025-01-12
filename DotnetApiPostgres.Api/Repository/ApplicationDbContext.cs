@@ -1,4 +1,3 @@
-using DotnetApiPostgres.Api.Models;
 using DotnetApiPostgres.Api.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 

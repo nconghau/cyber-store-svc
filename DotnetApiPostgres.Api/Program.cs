@@ -1,5 +1,4 @@
 using DotnetApiPostgres.Api;
-using DotnetApiPostgres.Api.Models;
 using DotnetApiPostgres.Api.Models.Entities;
 using DotnetApiPostgres.Api.Repository;
 using DotnetApiPostgres.Api.Services;
@@ -30,6 +29,12 @@ DynamicEntityRegistry.AddEntity<Category>();
 
 // for testing
 builder.Services.AddTransient<IPersonService, PersonService>();
+
+// kafka
+builder.Services.AddSingleton(new KafkaProducerService("localhost:9092"));  // Update with your Kafka server address
+builder.Services.AddSingleton(new KafkaConsumerService("localhost:9092", "order-topic", 3));  // Update with your topic
+builder.Services.AddHostedService<KafkaBackgroundService>(); // For consuming messages in background
+
 
 var app = builder.Build();
 

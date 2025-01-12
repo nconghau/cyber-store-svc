@@ -4,11 +4,14 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>47508620-cca2-4eb7-8062-3f055a208b8a</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
+    <PackageReference Include="Bogus" Version="35.6.1" />
+    <PackageReference Include="Confluent.Kafka" Version="2.8.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -24,6 +27,7 @@
     <None Remove="Mappings\" />
     <None Remove="Utils\" />
     <None Remove="Models\Common\" />
+    <None Remove="Docker\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
@@ -31,5 +35,6 @@
     <Folder Include="Mappings\" />
     <Folder Include="Utils\" />
     <Folder Include="Models\Common\" />
+    <Folder Include="Docker\" />
   </ItemGroup>
 </Project>

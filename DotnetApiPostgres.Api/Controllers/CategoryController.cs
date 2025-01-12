@@ -1,11 +1,13 @@
+using System.Text.Json;
+using Bogus;
 using DotnetApiPostgres.Api.Mappings;
 using DotnetApiPostgres.Api.Models.Common;
 using DotnetApiPostgres.Api.Models.DTOs;
 using DotnetApiPostgres.Api.Models.Entities;
 using DotnetApiPostgres.Api.Repository;
+using DotnetApiPostgres.Api.Services;
 using DotnetApiPostgres.Api.Utils;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DotnetApiPostgres.Api.Models;
 
