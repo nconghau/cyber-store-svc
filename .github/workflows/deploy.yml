@@ -1,0 +1,29 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.7.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Deploy to VPS
+      run: |
+        ssh root@14.225.204.163 << 'EOF'
+        set -e
+        cd /var/www/cyber-store-project/
+        git pull origin develop
+        docker-compose down
+        docker-compose up -d --build
+        EOF
