@@ -27,7 +27,6 @@
     <None Remove="Mappings\" />
     <None Remove="Utils\" />
     <None Remove="Models\Common\" />
-    <None Remove="Docker\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
@@ -35,6 +34,5 @@
     <Folder Include="Mappings\" />
     <Folder Include="Utils\" />
     <Folder Include="Models\Common\" />
-    <Folder Include="Docker\" />
   </ItemGroup>
 </Project>

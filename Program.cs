@@ -33,6 +33,10 @@ builder.Services.AddTransient<IPersonService, PersonService>();
 // kafka
 builder.Services.AddSingleton(new KafkaProducerService("localhost:9092"));  // Update with your Kafka server address
 builder.Services.AddSingleton(new KafkaConsumerService("localhost:9092", "order-topic", 3));  // Update with your topic
+
+//builder.Services.AddSingleton(new KafkaProducerService("14.225.204.163:9092"));  // Update with your Kafka server address
+//builder.Services.AddSingleton(new KafkaConsumerService("14.225.204.163:9092", "order-topic", 3));  // Update with your topic
+
 builder.Services.AddHostedService<KafkaBackgroundService>(); // For consuming messages in background
 
 
