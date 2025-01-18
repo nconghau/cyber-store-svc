@@ -24,7 +24,7 @@ public class OrderController : ControllerBase
         // Faker instance for generating fake order data
         var faker = new Faker();
 
-        for (var i = 0; i < 50; i++)
+        for (var i = 0; i < 100; i++)
         {
             // Create a fake order object
             var order = new
@@ -58,6 +58,7 @@ public class OrderController : ControllerBase
 
             // Send the JSON order to Kafka
             _ = _kafkaProducerService.ProduceAsync("order-topic", jsonOrder);
+            // await Task.Delay(100);
         }
 
         return true;
