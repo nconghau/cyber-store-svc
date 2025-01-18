@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Bogus;
-using DotnetApiPostgres.Api.Services;
+using DotnetApiPostgres.Api.Services.Kafka;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetApiPostgres.Api.Models;
@@ -9,22 +9,20 @@ namespace DotnetApiPostgres.Api.Models;
 [Route("api/[controller]/[action]")]
 public class OrderController : ControllerBase
 {
-    private readonly ILogger<OrderController> _logger;
     private readonly KafkaProducerService _kafkaProducerService;
-
-    public OrderController(KafkaProducerService kafkaProducerService, ILogger<OrderController> logger)
+    private readonly IConfiguration _configuration;
+    public OrderController(IConfiguration configuration, KafkaProducerService kafkaProducerService)
     {
-        _logger = logger;
         _kafkaProducerService = kafkaProducerService;
+        _configuration = configuration;
     }
 
     [HttpPost]
     public async Task<bool> TryKafkaCreateOrder()
     {
-        // Faker instance for generating fake order data
         var faker = new Faker();
 
-        for (var i = 0; i < 100; i++)
+        for (var i = 0; i < 10; i++)
         {
             // Create a fake order object
             var order = new
@@ -57,7 +55,8 @@ public class OrderController : ControllerBase
             var jsonOrder = JsonSerializer.Serialize(order);
 
             // Send the JSON order to Kafka
-            _ = _kafkaProducerService.ProduceAsync("order-topic", jsonOrder);
+            var kafkaTopic = _configuration["KafkaTopic"];
+            _ = _kafkaProducerService.ProduceAsync(kafkaTopic, jsonOrder);
             // await Task.Delay(100);
         }
 

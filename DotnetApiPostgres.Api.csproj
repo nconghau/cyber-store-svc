@@ -27,6 +27,14 @@
     <None Remove="Mappings\" />
     <None Remove="Utils\" />
     <None Remove="Models\Common\" />
+    <None Remove="Mediator\" />
+    <None Remove="Mediator\Commands\" />
+    <None Remove="Mediator\Commands\Web\" />
+    <None Remove="Mediator\Commands\Admin\" />
+    <None Remove="Mediator\Queries\" />
+    <None Remove="Mediator\Queries\Admin\" />
+    <None Remove="Mediator\Queries\Web\" />
+    <None Remove="Services\Kafka\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
@@ -34,5 +42,13 @@
     <Folder Include="Mappings\" />
     <Folder Include="Utils\" />
     <Folder Include="Models\Common\" />
+    <Folder Include="Mediator\" />
+    <Folder Include="Mediator\Commands\" />
+    <Folder Include="Mediator\Commands\Web\" />
+    <Folder Include="Mediator\Commands\Admin\" />
+    <Folder Include="Mediator\Queries\" />
+    <Folder Include="Mediator\Queries\Admin\" />
+    <Folder Include="Mediator\Queries\Web\" />
+    <Folder Include="Services\Kafka\" />
   </ItemGroup>
 </Project>

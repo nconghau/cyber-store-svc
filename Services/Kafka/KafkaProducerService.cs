@@ -1,24 +1,22 @@
 ﻿using Confluent.Kafka;
 
-namespace DotnetApiPostgres.Api.Services
+namespace DotnetApiPostgres.Api.Services.Kafka
 {
     public class KafkaProducerService
     {
-        private readonly IProducer<Null, string> _producer;
+        private readonly IProducer<string, string> _producer;
 
         public KafkaProducerService(string bootstrapServers)
         {
             var config = new ProducerConfig
             {
-                BootstrapServers = bootstrapServers
+                BootstrapServers = bootstrapServers,
             };
 
             try
             {
-                // Create the producer
-                _producer = new ProducerBuilder<Null, string>(config).Build();
+                _producer = new ProducerBuilder<string, string>(config).Build();
 
-                // Fetch metadata to verify connection and log details
                 using (var adminClient = new AdminClientBuilder(config).Build())
                 {
                     var metadata = adminClient.GetMetadata(TimeSpan.FromSeconds(5));
@@ -26,14 +24,14 @@ namespace DotnetApiPostgres.Api.Services
                     Console.WriteLine("Kafka Connection successful!");
 
                     // Log brokers
-                    Console.WriteLine("Available brokers:");
+                    Console.WriteLine("Kafka Available brokers:");
                     foreach (var broker in metadata.Brokers)
                     {
                         Console.WriteLine($"- {broker.Host}:{broker.Port}");
                     }
 
                     // Log topics
-                    Console.WriteLine("Available topics:");
+                    Console.WriteLine("Kafka Available topics:");
                     foreach (var topic in metadata.Topics)
                     {
                         if (topic.Error.IsError)
@@ -45,28 +43,38 @@ namespace DotnetApiPostgres.Api.Services
                         Console.WriteLine($"- {topic.Topic}: {topic.Partitions.Count} partitions");
                         foreach (var partition in topic.Partitions)
                         {
-                            Console.WriteLine($"  Partition {partition.PartitionId}: Leader {partition.Leader}, Replicas {string.Join(", ", partition.Replicas)}");
+                            Console.WriteLine($" Partition {partition.PartitionId}: Leader {partition.Leader}, Replicas {string.Join(", ", partition.Replicas)}");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to connect to Kafka: {ex.Message}");
+                Console.WriteLine($"Kafka failed to connect to: {ex.Message}");
                 throw;
             }
         }
 
-        public async Task ProduceAsync(string topic, string message)
+        public async Task ProduceAsync(string topic, string message, string? key="")
         {
             try
             {
-                var result = await _producer.ProduceAsync(topic, new Message<Null, string> { Value = message });
-                Console.WriteLine($"----\nMessage produced::{result.Value}");
+                var _key = string.IsNullOrEmpty(key) ?
+                 $"{topic}_{((DateTimeOffset)DateTime.Now).ToUnixTimeMilliseconds()}" :
+                 key;
+
+                var result = await _producer.ProduceAsync(
+                    topic,
+                    new Message<string, string>() {
+                        Key = _key,
+                        Value = message
+                    });
+
+                Console.WriteLine($"----\nProduceAsync::{result.Key}|{result.Value}");
             }
             catch (ProduceException<Null, string> e)
             {
-                Console.WriteLine($"Error producing message: {e.Message}");
+                Console.WriteLine($"Error ProduceAsync::{e.Message}");
             }
         }
 

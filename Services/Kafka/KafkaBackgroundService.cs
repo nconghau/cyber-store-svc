@@ -1,4 +1,4 @@
-﻿namespace DotnetApiPostgres.Api.Services
+﻿namespace DotnetApiPostgres.Api.Services.Kafka
 {
     public class KafkaBackgroundService : BackgroundService
     {
