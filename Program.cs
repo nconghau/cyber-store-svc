@@ -1,13 +1,16 @@
+using System.Reflection;
 using DotnetApiPostgres.Api;
 using DotnetApiPostgres.Api.Models.Entities;
 using DotnetApiPostgres.Api.Repository;
 using DotnetApiPostgres.Api.Services.Kafka;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using static DotnetApiPostgres.Api.ApplicationDbContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// init APIs
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
@@ -34,8 +37,15 @@ DynamicEntityRegistry.AddEntity<Category>();
 builder.Services.AddSingleton(new KafkaAdminService(kafkaBroker));
 builder.Services.AddSingleton(new KafkaProducerService(kafkaBroker));  
 builder.Services.AddSingleton(new KafkaConsumerService(kafkaBroker, kafkaTopic, kafkaNumConsumers, kafkaGroupId)); 
-builder.Services.AddHostedService<KafkaBackgroundService>(); 
+builder.Services.AddHostedService<KafkaBackgroundService>();
 
+// mediator
+builder.Services.AddMediatR(conf =>
+{
+    conf.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
+});
+
+// init app 
 var app = builder.Build();
 
 // init kafka
