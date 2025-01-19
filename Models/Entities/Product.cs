@@ -20,7 +20,7 @@ public class Product
     public required string ImgUrl { get; set; }
 
     [Column(TypeName = "json")]
-    public string ImageUrls { get; set; } = string.Empty;
+    public required string ImgUrls { get; set; } = "[]";
 
     [Column(TypeName = "decimal(10, 2)")]
     [Required]
@@ -31,18 +31,18 @@ public class Product
     public required decimal DiscountedPrice { get; set; }
 
     [Column(TypeName = "json")]
-    public string Tags { get; set; } = string.Empty;
+    public string Tags { get; set; } = "[]";
 
     [Column(TypeName = "varchar(50)")]
     [Required]
     public required string Brand { get; set; }
 
-    [Column(TypeName = "varchar(max)")]
+    [Column(TypeName = "text")]
     public string ShortDescription { get; set; } = string.Empty;
 
-    [Column(TypeName = "varchar(max)")]
+    [Column(TypeName = "text")]
     public string Description { get; set; } = string.Empty;
 
     [Column(TypeName = "json")]
-    public string Properties { get; set; } = string.Empty;
+    public string Properties { get; set; } = "[]";
 }

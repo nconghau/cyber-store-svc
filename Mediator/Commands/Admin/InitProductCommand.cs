@@ -9,14 +9,14 @@ using MediatR;
 
 namespace DotnetApiPostgres.Api.Mediator.Commands.Admin
 {
-    public sealed class InitCateroryCommand : ICommand<JsonResponse<List<Category>>>
+    public sealed class InitProductCommand : ICommand<JsonResponse<List<Product>>>
     {
-        public List<CategoryDto> Datas { get; set; } = new List<CategoryDto>();
+        public List<ProductDto> Datas { get; set; } = new List<ProductDto>();
     }
 
-    public sealed class InitCateroryCommandValidator : AbstractValidator<InitCateroryCommand>
+    public sealed class InitProductCommandValidator : AbstractValidator<InitProductCommand>
     {
-        public InitCateroryCommandValidator()
+        public InitProductCommandValidator()
         {
             RuleFor(x => x.Datas)
                 .NotNull()
@@ -25,12 +25,12 @@ namespace DotnetApiPostgres.Api.Mediator.Commands.Admin
         }
     }
 
-    public sealed class InitCateroryCommandHandler : ICommandHandler<InitCateroryCommand, JsonResponse<List<Category>>>
+    public sealed class InitProductCommandHandler : ICommandHandler<InitProductCommand, JsonResponse<List<Product>>>
     {
-        private readonly IPostgresRepository<Category, string> _repository;
+        private readonly IPostgresRepository<Product, string> _repository;
         private readonly IMediator _mediator;
-        public InitCateroryCommandHandler(
-            IPostgresRepository<Category, string> repository,
+        public InitProductCommandHandler(
+            IPostgresRepository<Product, string> repository,
             IMediator mediator
         )
         {
@@ -38,19 +38,19 @@ namespace DotnetApiPostgres.Api.Mediator.Commands.Admin
             _mediator = mediator;
         }
 
-        public async Task<JsonResponse<List<Category>>> Handle(InitCateroryCommand request, CancellationToken cancellationToken)
+        public async Task<JsonResponse<List<Product>>> Handle(InitProductCommand request, CancellationToken cancellationToken)
         {
-            var response = new JsonResponse<List<Category>>();
+            var response = new JsonResponse<List<Product>>();
             await _repository.DeleteAsync(f => true);
 
-            var initDataResult = new List<Category>();
+            var initDataResult = new List<Product>();
 
             foreach (var data in request.Datas)
             {
-                var category = await _repository.AddAsync(data.ToCategory());
-                if (category != null)
+                var product = await _repository.AddAsync(data.ToProduct());
+                if (product != null)
                 {
-                    initDataResult.Add(category);
+                    initDataResult.Add(product);
                 }
             }
             response.Success = true;

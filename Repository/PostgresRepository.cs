@@ -15,6 +15,7 @@ namespace DotnetApiPostgres.Api.Repository
         Task AddManyAsync(IEnumerable<TEntity> entities);
         Task UpdateManyAsync(IEnumerable<TEntity> entities);
         Task<PostgresDataSource<TEntity>> GetByQueryAsync(PostgresQuery query, Func<TEntity, bool>? filter = null);
+        Task<TEntity?> GetByFieldQueryAsync(string field, object value);
     }
 
     public class PostgresRepository<TEntity, TKey> : IPostgresRepository<TEntity, TKey> where TEntity : class
@@ -181,5 +182,27 @@ namespace DotnetApiPostgres.Api.Repository
             }
         }
 
+
+        public async Task<TEntity?> GetByFieldQueryAsync(string field, object value)
+        {
+            try
+            {
+                var parameter = Expression.Parameter(typeof(TEntity), "e");
+                var property = Expression.Property(parameter, field);
+                var constant = Expression.Constant(value);
+
+                var equalExpression = Expression.Equal(property, constant);
+
+                var lambda = Expression.Lambda<Func<TEntity, bool>>(equalExpression, parameter);
+
+                var entity = await _dbSet.FirstOrDefaultAsync(lambda);
+
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

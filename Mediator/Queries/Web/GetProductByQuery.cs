@@ -6,17 +6,17 @@ using MediatR;
 
 namespace DotnetApiPostgres.Api.Mediator.Queries.Web
 {
-    public sealed class GetCategoryByQuery : IQuery<PostgresDataSource<Category>>
+    public sealed class GetProductByQuery : IQuery<PostgresDataSource<Product>>
     {
         public PostgresQuery Query { get; set; } = new PostgresQuery();
     }
 
-    public sealed class GetCategoryByQueryHandler : IQueryHandler<GetCategoryByQuery, PostgresDataSource<Category>>
+    public sealed class GetProductByQueryHandler : IQueryHandler<GetProductByQuery, PostgresDataSource<Product>>
     {
-        private readonly IPostgresRepository<Category, string> _repository;
+        private readonly IPostgresRepository<Product, string> _repository;
         private readonly IMediator _mediator;
-        public GetCategoryByQueryHandler(
-            IPostgresRepository<Category, string> repository,
+        public GetProductByQueryHandler(
+            IPostgresRepository<Product, string> repository,
             IMediator mediator
         )
         {
@@ -24,7 +24,7 @@ namespace DotnetApiPostgres.Api.Mediator.Queries.Web
             _mediator = mediator;
         }
 
-        public async Task<PostgresDataSource<Category>> Handle(GetCategoryByQuery request, CancellationToken cancellationToken)
+        public async Task<PostgresDataSource<Product>> Handle(GetProductByQuery request, CancellationToken cancellationToken)
         {
             return await _repository.GetByQueryAsync(request.Query);
         }

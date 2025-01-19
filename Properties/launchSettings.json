@@ -22,9 +22,29 @@
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5106",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "KafkaBroker": "14.225.204.163:9092",
+        "KafkaTopic": "k_order_2",
+        "KafkaNumPartitions": "4",
+        "KafkaNumConsumers": "4",
+        "KafkaGroupId": "k_order_2_groupId",
+        "PostgresConnection": "Host=14.225.204.163;Port=5332;Database=cyber_store;Username=cyber_store;Password=cyber_store"
       },
       "dotnetRunMessages": true
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "KafkaBroker": "14.225.204.163:9092",
+        "KafkaTopic": "k_order_2",
+        "KafkaNumPartitions": "4",
+        "KafkaNumConsumers": "4",
+        "KafkaGroupId": "k_order_2_groupId",
+        "PostgresConnection": "Host=14.225.204.163;Port=5332;Database=cyber_store;Username=cyber_store;Password=cyber_store"
+      }
     }
   }
 }

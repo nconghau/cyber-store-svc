@@ -8,17 +8,17 @@ using MediatR;
 
 namespace DotnetApiPostgres.Api.Mediator.Queries.Web
 {
-    public sealed class GetAllCategoryQuery : IQuery<JsonResponse<List<CategoryDto>>>
+    public sealed class GetAllProductQuery : IQuery<JsonResponse<List<ProductDto>>>
     {
 
     }
 
-    public sealed class GetAllCategoryQueryHandler : IQueryHandler<GetAllCategoryQuery, JsonResponse<List<CategoryDto>>>
+    public sealed class GetAllProductQueryHandler : IQueryHandler<GetAllProductQuery, JsonResponse<List<ProductDto>>>
     {
-        private readonly IPostgresRepository<Category, string> _repository;
+        private readonly IPostgresRepository<Product, string> _repository;
         private readonly IMediator _mediator;
-        public GetAllCategoryQueryHandler(
-            IPostgresRepository<Category, string> repository,
+        public GetAllProductQueryHandler(
+            IPostgresRepository<Product, string> repository,
             IMediator mediator
         )
         {
@@ -26,13 +26,13 @@ namespace DotnetApiPostgres.Api.Mediator.Queries.Web
             _mediator = mediator;
         }
 
-        public async Task<JsonResponse<List<CategoryDto>>> Handle(GetAllCategoryQuery request, CancellationToken cancellationToken)
+        public async Task<JsonResponse<List<ProductDto>>> Handle(GetAllProductQuery request, CancellationToken cancellationToken)
         {
-            var response = new JsonResponse<List<CategoryDto>>();
+            var response = new JsonResponse<List<ProductDto>>();
             var datas = await _repository.GetAllAsync();
 
             response.Success = true;
-            response.Data = datas.Select(p => p.ToCategoryDto()).ToList();
+            response.Data = datas.Select(p => p.ToProductDto()).ToList();
             return response;
         }
     }
