@@ -11,15 +11,23 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
+
+var enabledKafka = true;
+var scriptMigration = false; // script: dotnet ef migrations add _ / dotnet ef database update
 
 // env
-//string postgresConnection = "Host=14.225.204.163;Port=5332;Database=cyber_store;Username=cyber_store;Password=cyber_store";
-string postgresConnection = builder.Configuration["PostgresConnection"] ?? throw new ArgumentNullException("PostgresConnection is not configured.");
-string kafkaBroker = builder.Configuration["KafkaBroker"] ?? throw new ArgumentNullException("KafkaBroker is not configured.");
-string kafkaTopic = builder.Configuration["KafkaTopic"] ?? throw new ArgumentNullException("KafkaTopic is not configured.");
+string postgresConnection = builder.Configuration["PostgresConnection"];
+string kafkaBroker = builder.Configuration["KafkaBroker"];
+string kafkaTopic = builder.Configuration["KafkaTopic"];
 var kafkaNumPartitions = int.Parse(builder.Configuration["KafkaNumPartitions"] ?? "1");
 var kafkaNumConsumers = int.Parse(builder.Configuration["KafkaNumConsumers"] ?? "1");
-string kafkaGroupId = builder.Configuration["KafkaGroupId"] ?? throw new ArgumentNullException("KafkaGroupId is not configured.");
+string kafkaGroupId = builder.Configuration["KafkaGroupId"];
+
+if (scriptMigration)
+{
+    postgresConnection = "Host=14.225.204.163;Port=5332;Database=cyber_store;Username=cyber_store;Password=cyber_store";
+}
 
 // postgres
 using var connection = new NpgsqlConnection(postgresConnection);
@@ -31,13 +39,23 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(postgresConnection));
            //.EnableSensitiveDataLogging()
            //.LogTo(Console.WriteLine));
-builder.Services.AddScoped(typeof(IPostgresRepository<,>), typeof(PostgresRepository<,>));
 
-// kafka
-builder.Services.AddSingleton(new KafkaAdminService(kafkaBroker));
-builder.Services.AddSingleton(new KafkaProducerService(kafkaBroker));
-builder.Services.AddSingleton(new KafkaConsumerService(kafkaBroker, kafkaTopic, kafkaNumConsumers, kafkaGroupId));
-builder.Services.AddHostedService<KafkaBackgroundService>();
+builder.Services.AddTransient(typeof(IPostgresRepository<,>), typeof(PostgresRepository<,>));
+
+
+if (enabledKafka)
+{
+    // kafka
+    builder.Services.AddSingleton(new KafkaAdminService(kafkaBroker));
+    builder.Services.AddSingleton(new KafkaProducerService(kafkaBroker));
+    builder.Services.AddSingleton(sp => new KafkaConsumerService(
+        sp.GetRequiredService<IHttpClientFactory>(),
+        kafkaBroker,
+        kafkaTopic,
+        kafkaNumConsumers,
+        kafkaGroupId));
+    builder.Services.AddHostedService<KafkaBackgroundService>();
+}
 
 // mediator
 builder.Services.AddMediatR(conf =>
@@ -45,17 +63,21 @@ builder.Services.AddMediatR(conf =>
     conf.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
 });
 
+
 // init app 
 var app = builder.Build();
 
 // init kafka
-using (var scope = app.Services.CreateScope())
+if (enabledKafka)
 {
-    var adminService = scope.ServiceProvider.GetRequiredService<KafkaAdminService>();
-    await adminService.CreateTopicAsync(kafkaTopic, kafkaNumPartitions, 1);
+    using (var scope = app.Services.CreateScope())
+    {
+        var adminService = scope.ServiceProvider.GetRequiredService<KafkaAdminService>();
+        await adminService.CreateTopicAsync(kafkaTopic, kafkaNumPartitions, 1);
+    }
 }
 
-// init postgres
+//init postgres
 DatabaseMigrationService.ApplyMigrations(app.Services);
 
 if (app.Environment.IsDevelopment())

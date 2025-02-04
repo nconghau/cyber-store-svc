@@ -3,7 +3,7 @@ namespace DotnetApiPostgres.Api.Models.Common
 {
     public class PostgresQuery
     {
-        public int PageNumber { get; set; } = 1;
+        public int PageNumber { get; set; } = 1; 
         public int PageSize { get; set; } = 10;
         public List<PostgresCriteria> Criteria { get; set; } = new();
         public PostgresSort? Sort { get; set; }

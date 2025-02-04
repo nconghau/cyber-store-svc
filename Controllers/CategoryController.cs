@@ -25,39 +25,39 @@ public class CategoryController : ControllerBase
     [HttpPost]
     public async Task<JsonResponse<List<Category>>> Init()
     {
-        var initData = new List<CategoryDto>()
+        var initData = new List<CategoryDTO>()
         {
-            new CategoryDto()
+            new CategoryDTO()
             {
                 Id=IdGenerator.GenerateId(),
                 Name="Phones",
                 IconUrl="https://res.cloudinary.com/dkeupjars/image/upload/v1734360178/cyber_store_project/Phones_aytd5e.svg",
             },
-            new CategoryDto()
+            new CategoryDTO()
             {
                 Id=IdGenerator.GenerateId(),
                 Name="Smart Watches",
                 IconUrl="https://res.cloudinary.com/dkeupjars/image/upload/v1734360178/cyber_store_project/Smart_Watches_fbk69c.svg",
             },
-             new CategoryDto()
+             new CategoryDTO()
             {
                 Id=IdGenerator.GenerateId(),
                 Name="Cameras",
                 IconUrl="https://res.cloudinary.com/dkeupjars/image/upload/v1734360177/cyber_store_project/Cameras_hsypos.svg",
             },
-              new CategoryDto()
+              new CategoryDTO()
             {
                 Id=IdGenerator.GenerateId(),
                 Name="Headphones",
                 IconUrl="https://res.cloudinary.com/dkeupjars/image/upload/v1734360178/cyber_store_project/Headphones_pajmi6.svg",
             },
-               new CategoryDto()
+               new CategoryDTO()
             {
                 Id=IdGenerator.GenerateId(),
                 Name="Computers",
                 IconUrl="https://res.cloudinary.com/dkeupjars/image/upload/v1734360553/cyber_store_project/Computers_jyvftv.svg",
             },
-                new CategoryDto()
+                new CategoryDTO()
             {
                 Id=IdGenerator.GenerateId(),
                 Name="Gaming",
@@ -73,7 +73,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<JsonResponse<List<CategoryDto>>> GetAllCategory([FromBody] GetAllCategoryQuery data)
+    public async Task<JsonResponse<List<CategoryDTO>>> GetAllCategory([FromBody] GetAllCategoryQuery data)
     {
         var jsonResponse = await _mediator.Send(data);
         return jsonResponse;

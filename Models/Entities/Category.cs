@@ -20,9 +20,9 @@ public class Category
     [Required]
     public required string IconUrl { get; set; }
 
-    public static CategoryDto ToGetCategoryDto(Category category)
+    public static CategoryDTO ToGetCategoryDto(Category category)
     {
-        return new CategoryDto
+        return new CategoryDTO
         {
             Id = category.Id,
             Name = category.Name,

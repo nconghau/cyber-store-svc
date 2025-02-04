@@ -9,7 +9,7 @@ using MediatR;
 
 namespace DotnetApiPostgres.Api.Mediator.Queries.Web
 {
-    public sealed class GetProductByFieldQuery : IQuery<JsonResponse<ProductDto>>
+    public sealed class GetProductByFieldQuery : IQuery<JsonResponse<ProductDTO>>
     {
         public string Field { get; set; }
         public string Value { get; set; }
@@ -30,7 +30,7 @@ namespace DotnetApiPostgres.Api.Mediator.Queries.Web
         }
     }
 
-    public sealed class GetProductByFieldQueryHandler : IQueryHandler<GetProductByFieldQuery, JsonResponse<ProductDto>>
+    public sealed class GetProductByFieldQueryHandler : IQueryHandler<GetProductByFieldQuery, JsonResponse<ProductDTO>>
     {
         private readonly IPostgresRepository<Product, string> _repository;
         private readonly IMediator _mediator;
@@ -43,9 +43,9 @@ namespace DotnetApiPostgres.Api.Mediator.Queries.Web
             _mediator = mediator;
         }
 
-        public async Task<JsonResponse<ProductDto>> Handle(GetProductByFieldQuery request, CancellationToken cancellationToken)
+        public async Task<JsonResponse<ProductDTO>> Handle(GetProductByFieldQuery request, CancellationToken cancellationToken)
         {
-            var response = new JsonResponse<ProductDto>();
+            var response = new JsonResponse<ProductDTO>();
             var data = await _repository.GetByFieldQueryAsync(request.Field, request.Value);
 
             if(data == null)

@@ -8,12 +8,12 @@ using MediatR;
 
 namespace DotnetApiPostgres.Api.Mediator.Queries.Web
 {
-    public sealed class GetAllProductQuery : IQuery<JsonResponse<List<ProductDto>>>
+    public sealed class GetAllProductQuery : IQuery<JsonResponse<List<ProductDTO>>>
     {
 
     }
 
-    public sealed class GetAllProductQueryHandler : IQueryHandler<GetAllProductQuery, JsonResponse<List<ProductDto>>>
+    public sealed class GetAllProductQueryHandler : IQueryHandler<GetAllProductQuery, JsonResponse<List<ProductDTO>>>
     {
         private readonly IPostgresRepository<Product, string> _repository;
         private readonly IMediator _mediator;
@@ -26,9 +26,9 @@ namespace DotnetApiPostgres.Api.Mediator.Queries.Web
             _mediator = mediator;
         }
 
-        public async Task<JsonResponse<List<ProductDto>>> Handle(GetAllProductQuery request, CancellationToken cancellationToken)
+        public async Task<JsonResponse<List<ProductDTO>>> Handle(GetAllProductQuery request, CancellationToken cancellationToken)
         {
-            var response = new JsonResponse<List<ProductDto>>();
+            var response = new JsonResponse<List<ProductDTO>>();
             var datas = await _repository.GetAllAsync();
 
             response.Success = true;

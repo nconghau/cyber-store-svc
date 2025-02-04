@@ -5,9 +5,9 @@ namespace DotnetApiPostgres.Api.Mappings;
 
 public static class CategoryMappings
 {
-    public static CategoryDto ToCategoryDto(this Category entity)
+    public static CategoryDTO ToCategoryDto(this Category entity)
     {
-        return new CategoryDto
+        return new CategoryDTO
         {
             Id = entity.Id,
             Name = entity.Name,
@@ -15,7 +15,7 @@ public static class CategoryMappings
         };
     }
 
-    public static Category ToCategory(this CategoryDto dto)
+    public static Category ToCategory(this CategoryDTO dto)
     {
         return new Category
         {

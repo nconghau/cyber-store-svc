@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotnetApiPostgres.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250119144533_AddCategoryProduct")]
-    partial class AddCategoryProduct
+    [Migration("20250202040052_ChangeOrderDateType")]
+    partial class ChangeOrderDateType
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,30 @@ namespace DotnetApiPostgres.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Category");
+                });
+
+            modelBuilder.Entity("DotnetApiPostgres.Api.Models.Entities.Order", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(24)");
+
+                    b.Property<string>("CustomerName")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<long>("OrderDate")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("DotnetApiPostgres.Api.Models.Entities.Product", b =>

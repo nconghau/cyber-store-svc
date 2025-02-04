@@ -26,9 +26,9 @@ public class ProductController : ControllerBase
     [HttpPost]
     public async Task<JsonResponse<List<Product>>> Init()
     {
-        var initData = new List<ProductDto>()
+        var initData = new List<ProductDTO>()
         {
-            new ProductDto()
+            new ProductDTO()
             {
                 Id=IdGenerator.GenerateId(),
                 Name="Apple iPhone 14 Pro Max",
@@ -83,7 +83,7 @@ public class ProductController : ControllerBase
                     }
                 })
             },
-            new ProductDto()
+            new ProductDTO()
             {
                 Id = IdGenerator.GenerateId(),
                 Name = "Apple iPhone 14 Pro Max 128GB",
@@ -132,7 +132,7 @@ public class ProductController : ControllerBase
                     }
                 })
             },
-            new ProductDto()
+            new ProductDTO()
             {
                 Id = IdGenerator.GenerateId(),
                 Name = "Samsung Galaxy S23 Ultra",
@@ -181,7 +181,7 @@ public class ProductController : ControllerBase
                     }
                 })
             },
-            new ProductDto()
+            new ProductDTO()
             {
                 Id = IdGenerator.GenerateId(),
                 Name = "Google Pixel 8 Pro",
@@ -230,7 +230,7 @@ public class ProductController : ControllerBase
                     }
                 })
             },
-            new ProductDto()
+            new ProductDTO()
             {
                 Id = IdGenerator.GenerateId(),
                 Name = "OnePlus 11 5G",
@@ -279,7 +279,7 @@ public class ProductController : ControllerBase
                     }
                 })
             },
-            new ProductDto()
+            new ProductDTO()
             {
                 Id = IdGenerator.GenerateId(),
                 Name = "Xiaomi Mi 13 Pro",
@@ -291,7 +291,7 @@ public class ProductController : ControllerBase
                 Brand = "Xiaomi",
                 ImgUrl = "https://res.cloudinary.com/dkeupjars/image/upload/v1734360884/cyber_store_project/Mi_13_Pro_vbb8ve.png",
             },
-            new ProductDto()
+            new ProductDTO()
             {
                 Id = IdGenerator.GenerateId(),
                 Name = "Oppo Find X5 Pro",
@@ -303,7 +303,7 @@ public class ProductController : ControllerBase
                 Brand = "Oppo",
                 ImgUrl = "https://res.cloudinary.com/dkeupjars/image/upload/v1734360885/cyber_store_project/Oppo_Find_X5_Pro_qir4du.png",
             },
-            new ProductDto()
+            new ProductDTO()
             {
                 Id = IdGenerator.GenerateId(),
                 Name = "Sony Xperia 1 IV",
@@ -315,7 +315,7 @@ public class ProductController : ControllerBase
                 Brand = "Sony",
                 ImgUrl = "https://res.cloudinary.com/dkeupjars/image/upload/v1734360886/cyber_store_project/Sony_Xperia_1_IV_jljjdu.png",
             },
-            new ProductDto()
+            new ProductDTO()
             {
                 Id = IdGenerator.GenerateId(),
                 Name = "Asus ROG Phone 7",
@@ -327,7 +327,7 @@ public class ProductController : ControllerBase
                 Brand = "Asus",
                 ImgUrl = "https://res.cloudinary.com/dkeupjars/image/upload/v1734360887/cyber_store_project/ROG_Phone_7_xxxplt.png",
             },
-            new ProductDto()
+            new ProductDTO()
             {
                 Id = IdGenerator.GenerateId(),
                 Name = "Motorola Edge 40",
@@ -349,7 +349,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<JsonResponse<List<ProductDto>>> GetAllProduct([FromBody] GetAllProductQuery data)
+    public async Task<JsonResponse<List<ProductDTO>>> GetAllProduct([FromBody] GetAllProductQuery data)
     {
         var jsonResponse = await _mediator.Send(data);
         return jsonResponse;
@@ -363,7 +363,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<JsonResponse<ProductDto>> GetProductByField([FromBody] GetProductByFieldQuery data)
+    public async Task<JsonResponse<ProductDTO>> GetProductByField([FromBody] GetProductByFieldQuery data)
     {
         var jsonResponse = await _mediator.Send(data);
         return jsonResponse;

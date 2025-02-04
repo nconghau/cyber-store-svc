@@ -5,9 +5,9 @@ namespace DotnetApiPostgres.Api.Mappings;
 
 public static class ProductMappings
 {
-    public static ProductDto ToProductDto(this Product entity)
+    public static ProductDTO ToProductDto(this Product entity)
     {
-        return new ProductDto
+        return new ProductDTO
         {
             Id = entity.Id,
             Name = entity.Name,
@@ -23,7 +23,7 @@ public static class ProductMappings
         };
     }
 
-    public static Product ToProduct(this ProductDto dto)
+    public static Product ToProduct(this ProductDTO dto)
     {
         return new Product
         {

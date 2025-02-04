@@ -5,7 +5,7 @@
 namespace DotnetApiPostgres.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class AddCategoryProduct : Migration
+    public partial class ChangeOrderDateType : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,6 +21,21 @@ namespace DotnetApiPostgres.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Category", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Order",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "varchar(24)", nullable: false),
+                    CustomerName = table.Column<string>(type: "varchar(255)", nullable: false),
+                    Email = table.Column<string>(type: "varchar(255)", nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    OrderDate = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Order", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -50,6 +65,9 @@ namespace DotnetApiPostgres.Api.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Category");
+
+            migrationBuilder.DropTable(
+                name: "Order");
 
             migrationBuilder.DropTable(
                 name: "Product");

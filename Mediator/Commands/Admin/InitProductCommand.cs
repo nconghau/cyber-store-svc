@@ -11,7 +11,7 @@ namespace DotnetApiPostgres.Api.Mediator.Commands.Admin
 {
     public sealed class InitProductCommand : ICommand<JsonResponse<List<Product>>>
     {
-        public List<ProductDto> Datas { get; set; } = new List<ProductDto>();
+        public List<ProductDTO> Datas { get; set; } = new List<ProductDTO>();
     }
 
     public sealed class InitProductCommandValidator : AbstractValidator<InitProductCommand>

@@ -1,6 +1,6 @@
 namespace DotnetApiPostgres.Api.Models.DTOs;
 
-public class ProductDto
+public class ProductDTO
 {
     public string Id { get; set; }
     public required string Name { get; set; }
