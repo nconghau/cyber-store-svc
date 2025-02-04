@@ -2,8 +2,10 @@ using System.Reflection;
 using DotnetApiPostgres.Api;
 using DotnetApiPostgres.Api.Repository;
 using DotnetApiPostgres.Api.Services.Kafka;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using Telegram.Bot;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
+
+// notify
+builder.Services.AddSingleton<ITelegramBotClient>(new TelegramBotClient("7943487167:AAEVML1jEvj-lB2--try2QJfW0xiGp531xY"));
 
 var enabledKafka = true;
 var scriptMigration = false; // script: dotnet ef migrations add _ / dotnet ef database update
@@ -50,6 +55,7 @@ if (enabledKafka)
     builder.Services.AddSingleton(new KafkaProducerService(kafkaBroker));
     builder.Services.AddSingleton(sp => new KafkaConsumerService(
         sp.GetRequiredService<IHttpClientFactory>(),
+        sp.GetRequiredService<IMediator>(),
         kafkaBroker,
         kafkaTopic,
         kafkaNumConsumers,
@@ -62,6 +68,7 @@ builder.Services.AddMediatR(conf =>
 {
     conf.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
 });
+
 
 
 // init app 

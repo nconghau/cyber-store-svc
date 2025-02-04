@@ -47,15 +47,6 @@ namespace DotnetApiPostgres.Api.Mediator.Commands.Web
 
                 var data = await _orderRepository.AddAsync(orderData);
 
-                //var data2 = await _orderRepository.AddAsync(new Order()
-                //{
-                //    Id = IdGenerator.GenerateId(),
-                //    Email = "1",
-                //    CustomerName = "1",
-                //    OrderDate = DateTime.UtcNow,
-                //    TotalAmount = 1
-                //});
-
                 if (data == null)
                 {
                     return response;

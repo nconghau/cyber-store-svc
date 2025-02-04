@@ -38,7 +38,7 @@ public class OrderController : ControllerBase
                 CustomerName = faker.Name.FullName(),
                 Email = faker.Internet.Email(),
                 TotalAmount = (int)faker.Random.Decimal(10, 1000),
-                OrderDate = faker.Date.Recent().Ticks,
+                OrderDate = new DateTimeOffset(faker.Date.Recent()).ToUnixTimeSeconds()
                 //ShipMethod = faker.PickRandom(new[] { "Standard", "Express", "Next-Day" }),
                 //Items = Enumerable.Range(1, faker.Random.Int(1, 3))
                 //        .Select(_ => new ItemDTO

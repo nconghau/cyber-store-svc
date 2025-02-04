@@ -1,22 +1,34 @@
 ﻿using System.Text;
 using System.Text.Json;
 using Confluent.Kafka;
+using DotnetApiPostgres.Api.Mediator.Commands.Notify;
 using DotnetApiPostgres.Api.Mediator.Commands.Web;
+using DotnetApiPostgres.Api.Models.Common;
 using DotnetApiPostgres.Api.Models.DTOs;
+using MediatR;
 
 namespace DotnetApiPostgres.Api.Services.Kafka
 {
     public class KafkaConsumerService : IHostedService
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IMediator _mediator;
         private readonly List<IConsumer<string, string>> _consumers = new();
         private readonly List<string> _topics = new List<string>();
         private readonly int _numConsumers;
         private readonly CancellationTokenSource _cts = new();
 
-        public KafkaConsumerService(IHttpClientFactory httpClientFactory, string bootstrapServers, string topic, int numConsumers, string? groupId= "groupId_default")
+        public KafkaConsumerService(
+            IHttpClientFactory httpClientFactory,
+            IMediator mediator,
+            string bootstrapServers,
+            string topic,
+            int numConsumers,
+            string? groupId= "groupId_default"
+        )
         {
-            _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+            _httpClientFactory = httpClientFactory;
+            _mediator = mediator;
             _topics.Add(topic);
             _topics = _topics.Distinct().ToList();
             _numConsumers = numConsumers;
@@ -75,7 +87,6 @@ namespace DotnetApiPostgres.Api.Services.Kafka
             }
         }
 
-
         private void ConsumeMessages(IConsumer<string, string> consumer, int consumerIndex, CancellationToken cancellationToken)
         {
             consumer.Subscribe(_topics);
@@ -89,7 +100,7 @@ namespace DotnetApiPostgres.Api.Services.Kafka
                     {
                         case "k_order_2":
                             var data = new CreateOrderCommand { data = JsonSerializer.Deserialize<OrderDTO>(consumeResult?.Message.Value) };
-                            if (data.data != null)
+                            if (data?.data != null)
                             {
                                 Task.Run(() => CallCreateOrderApi(data)); 
                             }
@@ -111,16 +122,83 @@ namespace DotnetApiPostgres.Api.Services.Kafka
             var apiUrl = "https://localhost:7294/api/Order/CreateOrder"; 
             var jsonContent = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
 
-            var response = await client.PostAsync(apiUrl, jsonContent);
+            try
+            {
+                var response = await client.PostAsync(apiUrl, jsonContent);
 
-            // handle notify tele bot
-            if (response.IsSuccessStatusCode)
-            {
-                Console.WriteLine("✅ Order created successfully!");
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonResponse = JsonSerializer.Deserialize<JsonResponse<OrderDTO>>(
+                        await response.Content.ReadAsStringAsync(),
+                        new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+
+                    if (jsonResponse?.Data != null)
+                    {
+                        var order = jsonResponse.Data;
+
+                        var message = new StringBuilder();
+                        message.AppendLine("✅ <b>Order created successfully!</b>");
+                        message.AppendLine("=================================================");
+
+                        foreach (var property in typeof(OrderDTO).GetProperties())
+                        {
+                            object rawValue = property.GetValue(order);
+                            string value;
+
+                            if (property.Name == "OrderDate" && rawValue is long timestamp)
+                            {
+                                var dateTime = DateTimeOffset.FromUnixTimeSeconds(timestamp).ToLocalTime().DateTime;
+                                value = dateTime.ToString("HH:mm dd/MM/yyyy");
+                            }
+                            else
+                            {
+                                value = rawValue?.ToString() ?? "N/A";
+                            }
+
+                            message.AppendLine($"- {property.Name}: <b>{value}</b>");
+                        }
+
+                        message.AppendLine("=================================================");
+
+                        // Send message
+                        _ = _mediator.Send(new SendTextMessageTelegramBotCommand()
+                        {
+                            Message = message.ToString()
+                        });
+                    }
+                }
+                else
+                {
+                    // Send message
+                    var message = new StringBuilder();
+                    message.AppendLine("❌ <b>Failed to create order!</b>");
+                    message.AppendLine("=================================================");
+                    message.AppendLine($"Status Code: {response.StatusCode}");
+                    message.AppendLine("=================================================");
+
+                    _ = _mediator.Send(new SendTextMessageTelegramBotCommand()
+                    {
+                        Message = message.ToString()
+                    });
+                }
+
             }
-            else
+            catch(Exception ex)
             {
-                Console.WriteLine($"❌ Failed to create order. Status Code: {response.StatusCode}");
+                // Send message
+                var message = new StringBuilder();
+                message.AppendLine("❌ <b>Failed to create order!</b>");
+                message.AppendLine("=================================================");
+                message.AppendLine($"Exception: {ex.Message}");
+                message.AppendLine("=================================================");
+
+                _ = _mediator.Send(new SendTextMessageTelegramBotCommand()
+                {
+                    Message = message.ToString()
+                });
             }
         }
     }
