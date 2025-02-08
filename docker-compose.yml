@@ -57,6 +57,15 @@ services:
       timeout: 10s
       retries: 5
 
+  redis:
+    container_name: redis
+    image: redis:7.4.1
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - cyberstore_redis_data:/data/cyber_store
+
 networks:
   db:
     driver: bridge
@@ -65,3 +74,4 @@ networks:
 
 volumes:
   db:
+  cyberstore_redis_data: 

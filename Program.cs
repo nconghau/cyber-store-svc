@@ -1,10 +1,13 @@
-using System.Reflection;
 using DotnetApiPostgres.Api;
 using DotnetApiPostgres.Api.Repository;
+using DotnetApiPostgres.Api.Services.Cache;
 using DotnetApiPostgres.Api.Services.Kafka;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Npgsql;
+using StackExchange.Redis;
+using System.Reflection;
 using Telegram.Bot;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,8 +45,8 @@ Console.WriteLine($"PostgreSQL version: {connection.PostgreSqlVersion}");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(postgresConnection));
-           //.EnableSensitiveDataLogging()
-           //.LogTo(Console.WriteLine));
+//.EnableSensitiveDataLogging()
+//.LogTo(Console.WriteLine));
 
 builder.Services.AddTransient(typeof(IPostgresRepository<,>), typeof(PostgresRepository<,>));
 
@@ -69,7 +72,25 @@ builder.Services.AddMediatR(conf =>
     conf.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
 });
 
+//redis
+var cacheConnectionString = builder.Configuration.GetConnectionString("redis")!;
+try
+{
+    IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(cacheConnectionString);
+    builder.Services.TryAddSingleton(connectionMultiplexer);
 
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer);
+    });
+}
+catch
+{
+    // HACK: Allows application to run without a Redis server.
+    builder.Services.AddDistributedMemoryCache();
+}
+
+builder.Services.TryAddSingleton<ICacheService, CacheService>();
 
 // init app 
 var app = builder.Build();
