@@ -106,7 +106,7 @@ namespace DotnetApiPostgres.Api.Mediator.Commands.Web
                             }
                             break;
                         case "OrderItems":
-                            if (rawValue is List<OrderItemDTO> items && items.Any())
+                            if (orderItems.Any())
                             {
                                 var orderItemsString = string.Join(Environment.NewLine,
                                     orderItems.Select(item =>
