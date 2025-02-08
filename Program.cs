@@ -1,119 +1,40 @@
-using DotnetApiPostgres.Api;
 using DotnetApiPostgres.Api.Repository;
-using DotnetApiPostgres.Api.Services.Cache;
+using DotnetApiPostgres.Api.Services.Common;
+using DotnetApiPostgres.Api.Services.GoogleServices;
 using DotnetApiPostgres.Api.Services.Kafka;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Npgsql;
-using StackExchange.Redis;
-using System.Reflection;
-using Telegram.Bot;
+using DotnetApiPostgres.Api.Services.Redis;
+using DotnetApiPostgres.Api.Services.TelegramBot;
 
+// add services
 var builder = WebApplication.CreateBuilder(args);
-
-// init APIs
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
-builder.Services.AddHttpClient();
-
-// notify
-builder.Services.AddSingleton<ITelegramBotClient>(new TelegramBotClient("7943487167:AAEVML1jEvj-lB2--try2QJfW0xiGp531xY"));
+builder.Services.AddCommonServices();
 
 var scriptMigrationPostgres = false; // script: dotnet ef migrations add _ / dotnet ef database update
-
-// env
-string postgresConnection = builder.Configuration["PostgresConnection"];
-string kafkaBroker = builder.Configuration["KafkaBroker"];
-string kafkaTopic = builder.Configuration["KafkaTopic"];
-var kafkaNumPartitions = int.Parse(builder.Configuration["KafkaNumPartitions"] ?? "1");
-var kafkaNumConsumers = int.Parse(builder.Configuration["KafkaNumConsumers"] ?? "1");
-string kafkaGroupId = builder.Configuration["KafkaGroupId"];
-
-if (scriptMigrationPostgres)
-{
-    postgresConnection = "Host=14.225.204.163;Port=5332;Database=cyber_store;Username=cyber_store;Password=cyber_store";
-}
-
-// postgres
-using var connection = new NpgsqlConnection(postgresConnection);
-connection.Open();
-Console.WriteLine("PostgreSQL Connection successful!");
-Console.WriteLine($"PostgreSQL version: {connection.PostgreSqlVersion}");
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseNpgsql(postgresConnection));
-//.EnableSensitiveDataLogging()
-//.LogTo(Console.WriteLine));
-
-builder.Services.AddTransient(typeof(IPostgresRepository<,>), typeof(PostgresRepository<,>));
-
-
+builder.Services.AddPostgresServices(builder.Configuration, scriptMigrationPostgres);
 if (!scriptMigrationPostgres)
 {
-    // kafka
-    builder.Services.AddSingleton(new KafkaAdminService(kafkaBroker));
-    builder.Services.AddSingleton(new KafkaProducerService(kafkaBroker));
-    builder.Services.AddSingleton(sp => new KafkaConsumerService(
-        sp.GetRequiredService<IHttpClientFactory>(),
-        sp.GetRequiredService<IMediator>(),
-        kafkaBroker,
-        kafkaTopic,
-        kafkaNumConsumers,
-        kafkaGroupId));
-    builder.Services.AddHostedService<KafkaBackgroundService>();
+    builder.Services.AddKafkaServices(builder.Configuration);
 }
+builder.Services.AddRedisServices(builder.Configuration);
+builder.Services.AddGoogleDiagnosticsServices();
+builder.Services.AddTelegramBotServices();
 
-// mediator
-builder.Services.AddMediatR(conf =>
-{
-    conf.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
-});
-
-//redis
-var cacheConnectionString = builder.Configuration.GetConnectionString("redis")!;
-try
-{
-    IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(cacheConnectionString);
-    builder.Services.TryAddSingleton(connectionMultiplexer);
-
-    builder.Services.AddStackExchangeRedisCache(options =>
-    {
-        options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer);
-    });
-}
-catch
-{
-    // HACK: Allows application to run without a Redis server.
-    builder.Services.AddDistributedMemoryCache();
-}
-
-builder.Services.TryAddSingleton<ICacheService, CacheService>();
-
-// init app 
+// use app 
 var app = builder.Build();
-
-// init kafka
-if (!scriptMigrationPostgres)
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var adminService = scope.ServiceProvider.GetRequiredService<KafkaAdminService>();
-        await adminService.CreateTopicAsync(kafkaTopic, kafkaNumPartitions, 1);
-    }
-}
-
-//init postgres
-DatabaseMigrationService.ApplyMigrations(app.Services);
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
 app.MapControllers();
+DatabaseMigrationService.ApplyMigrations(app.Services);
+if (!scriptMigrationPostgres)
+{
+    _ = app.UseKafkaApplicationAsync();
+}
+
+// run
 app.Run();
 

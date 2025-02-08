@@ -23,6 +23,7 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Telegram.Bot" Version="22.3.0" />
+    <PackageReference Include="Google.Cloud.Diagnostics.AspNetCore3" Version="5.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,6 +43,8 @@
     <None Remove="Mediator\Common\" />
     <None Remove="Services\TelegramBot\" />
     <None Remove="Mediator\Commands\Notify\" />
+    <None Remove="Private\" />
+    <None Remove="Services\Common\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
@@ -60,5 +63,7 @@
     <Folder Include="Mediator\Common\" />
     <Folder Include="Services\TelegramBot\" />
     <Folder Include="Mediator\Commands\Notify\" />
+    <Folder Include="Private\" />
+    <Folder Include="Services\Common\" />
   </ItemGroup>
 </Project>
