@@ -45,6 +45,7 @@
     <None Remove="Mediator\Commands\Notify\" />
     <None Remove="Private\" />
     <None Remove="Services\Common\" />
+    <None Remove="Behaviors\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
@@ -65,5 +66,6 @@
     <Folder Include="Mediator\Commands\Notify\" />
     <Folder Include="Private\" />
     <Folder Include="Services\Common\" />
+    <Folder Include="Behaviors\" />
   </ItemGroup>
 </Project>

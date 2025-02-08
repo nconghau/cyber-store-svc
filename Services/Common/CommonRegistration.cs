@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using BuildingBlocks.Application.Behaviors;
+using MediatR;
 
 namespace DotnetApiPostgres.Api.Services.Common
 {
@@ -15,6 +17,9 @@ namespace DotnetApiPostgres.Api.Services.Common
             {
                 conf.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
             });
+
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehaviour<,>));
+
             return services;
         }
     }

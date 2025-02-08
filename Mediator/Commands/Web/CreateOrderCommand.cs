@@ -46,9 +46,10 @@ namespace DotnetApiPostgres.Api.Mediator.Commands.Web
 
     public sealed class CreateOrderCommandHandler : ICommandHandler<CreateOrderCommand, JsonResponse<OrderDTO>>
     {
-        private readonly IPostgresRepository<Order, string> _orderRepository;
+        private readonly IPostgresRepository<Models.Entities.Order, string> _orderRepository;
         private readonly IPostgresRepository<OrderItem, string> _orderItemRepository;
         private readonly IMediator _mediator;
+
         public CreateOrderCommandHandler(
             IPostgresRepository<Order, string> orderRepository,
             IPostgresRepository<OrderItem, string> orderItemRepository,
@@ -68,7 +69,6 @@ namespace DotnetApiPostgres.Api.Mediator.Commands.Web
             try
             {
                 var orderData = request.Data.ToOrder();
-
                 await _orderRepository.AddAsync(orderData);
 
                 var orderItems = request.Data.OrderItems
@@ -86,19 +86,69 @@ namespace DotnetApiPostgres.Api.Mediator.Commands.Web
 
                 // Save all changes in a single transaction
                 await _orderRepository.SaveChangesAsync();
-                await transaction.CommitAsync(); 
+                await transaction.CommitAsync();
+
+                // Send message
+                var message = new StringBuilder();
+                message.AppendLine("✅ <b>Order created successfully!</b>");
+                message.AppendLine("=========================");
+
+                foreach (var property in typeof(Order).GetProperties())
+                {
+                    object rawValue = property.GetValue(orderData);
+                    switch (property.Name)
+                    {
+                        case "OrderDate":
+                            if (rawValue is long timestamp)
+                            {
+                                var dateTime = DateTimeOffset.FromUnixTimeSeconds(timestamp).ToLocalTime().DateTime;
+                                message.AppendLine($"- {property.Name}: <b>{dateTime.ToString("HH:mm dd/MM/yyyy")}</b>");
+                            }
+                            break;
+                        case "OrderItems":
+                            if (rawValue is List<OrderItemDTO> items && items.Any())
+                            {
+                                var orderItemsString = string.Join(Environment.NewLine,
+                                    orderItems.Select(item =>
+                                        $"\n\t+ ProductName: <b>{item.ProductName}</b>" +
+                                        $"\n\t+ ProductId: <b>{item.ProductId}</b>" +
+                                        $"\n\t+ Price: <b>{item.Price}</b>" +
+                                        $"\n\t+ Qty: <b>{item.Qty}</b>"
+                                    )
+                                );
+                                message.AppendLine($"- {property.Name}: {orderItemsString}");
+                            }
+                            else
+                            {
+                                message.AppendLine($"- {property.Name}: <b>No items</b>");
+                            }
+                            break;
+                        default:
+                            var value = rawValue?.ToString() ?? "N/A";
+                            message.AppendLine($"- {property.Name}: <b>{value}</b>");
+                            break;
+                    }
+                }
+
+                message.AppendLine("=========================");
+
+                // Send message
+                _ = _mediator.Send(new SendTextMessageTelegramBotCommand()
+                {
+                    Message = message.ToString()
+                });
 
                 response.Success = true;
                 response.Data = request.Data;
                 return response;
+
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync(); // Rollback if any error occurs
-
                 var message = new StringBuilder();
                 message.AppendLine("❌ <b>Failed to create order!</b>");
                 message.AppendLine("=========================");
+                message.AppendLine($"Action: CreateOrderCommand");
                 message.AppendLine($"Error: {ex.Message}");
                 message.AppendLine("=========================");
 
@@ -108,6 +158,9 @@ namespace DotnetApiPostgres.Api.Mediator.Commands.Web
                 });
 
                 response.Message = "Order creation failed due to an internal error.";
+
+                await transaction.RollbackAsync(); // Rollback if any error occurs
+
                 return response;
             }
         }
