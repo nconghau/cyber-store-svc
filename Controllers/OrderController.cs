@@ -1,8 +1,10 @@
 using System.Text.Json;
 using Bogus;
 using DotnetApiPostgres.Api.Mediator.Commands.Web;
+using DotnetApiPostgres.Api.Mediator.Queries.Web;
 using DotnetApiPostgres.Api.Models.Common;
 using DotnetApiPostgres.Api.Models.DTOs;
+using DotnetApiPostgres.Api.Models.Entities;
 using DotnetApiPostgres.Api.Services.Kafka;
 using DotnetApiPostgres.Api.Utils;
 using MediatR;
@@ -60,4 +62,20 @@ public class OrderController : ControllerBase
         return jsonResponse;
     }
 
+    [HttpPost]
+    public async Task<PostgresDataSource<Order>> GetOrderByQuery([FromBody] PostgresQuery query)
+    {
+        var jsonResponse = await _mediator.Send(new GetOrderByQuery()
+        {
+            Query = query
+        });
+        return jsonResponse;
+    }
+
+    [HttpPost]
+    public async Task<JsonResponse<OrderDTO>> GetOrderByField([FromBody] GetOrderByFieldQuery data)
+    {
+        var jsonResponse = await _mediator.Send(data);
+        return jsonResponse;
+    }
 }

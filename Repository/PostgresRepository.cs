@@ -15,8 +15,8 @@ namespace DotnetApiPostgres.Api.Repository
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task AddManyAsync(IEnumerable<TEntity> entities);
         Task UpdateManyAsync(IEnumerable<TEntity> entities);
-        Task<PostgresDataSource<TEntity>> GetByQueryAsync(PostgresQuery query, Func<TEntity, bool>? filter = null);
-        Task<TEntity?> GetByFieldQueryAsync(string field, object value);
+        Task<PostgresDataSource<TEntity>> GetByQueryAsync(PostgresQuery query, Func<TEntity, bool>? filter = null, List<string> includeProperties = null);
+        Task<TEntity?> GetByFieldQueryAsync(string field, object value, List<string> includeProperties = null);
         Task<int> SaveChangesAsync();
         Task<IDbContextTransaction> BeginTransactionAsync();
     }
@@ -83,14 +83,12 @@ namespace DotnetApiPostgres.Api.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PostgresDataSource<TEntity>> GetByQueryAsync(PostgresQuery query, Func<TEntity, bool> filter = null)
+        public async Task<PostgresDataSource<TEntity>> GetByQueryAsync(PostgresQuery query, Func<TEntity, bool> filter = null, List<string> includeProperties = null)
         {
             try
             {
-                // Start with the base query (DbSet)
                 IQueryable<TEntity> queryable = _dbSet;
 
-                // Apply the criteria dynamically
                 if (query.Criteria.Any())
                 {
                     var parameter = Expression.Parameter(typeof(TEntity), "e");
@@ -156,13 +154,24 @@ namespace DotnetApiPostgres.Api.Repository
                     queryable = (IQueryable<TEntity>)method.Invoke(null, new object[] { queryable, lambda });
                 }
 
+
+                // Apply ref data table
+                if (includeProperties != null && includeProperties.Any())
+                {
+                    foreach (var includeProperty in includeProperties)
+                    {
+                        queryable = queryable.Include(includeProperty);
+                    }
+                }
+
                 // Apply pagination (skip and take)
                 var totalRecords = await queryable.CountAsync();
+
+
                 var pagedData = await queryable.Skip((query.PageNumber - 1) * query.PageSize)
                                                .Take(query.PageSize)
                                                .ToListAsync();
 
-                // Create the result object
                 var dataSource = new PostgresDataSource<TEntity>
                 {
                     Total = totalRecords,
@@ -176,7 +185,6 @@ namespace DotnetApiPostgres.Api.Repository
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it accordingly
                 return new PostgresDataSource<TEntity>
                 {
                     Success = false,
@@ -186,7 +194,7 @@ namespace DotnetApiPostgres.Api.Repository
         }
 
 
-        public async Task<TEntity?> GetByFieldQueryAsync(string field, object value)
+        public async Task<TEntity?> GetByFieldQueryAsync(string field, object value, List<string> includeProperties = null)
         {
             try
             {
@@ -195,14 +203,23 @@ namespace DotnetApiPostgres.Api.Repository
                 var constant = Expression.Constant(value);
 
                 var equalExpression = Expression.Equal(property, constant);
-
                 var lambda = Expression.Lambda<Func<TEntity, bool>>(equalExpression, parameter);
 
-                var entity = await _dbSet.FirstOrDefaultAsync(lambda);
+                IQueryable<TEntity> query = _dbSet.Where(lambda);
 
+                // Apply ref data table
+                if (includeProperties != null && includeProperties.Any())
+                {
+                    foreach (var includeProperty in includeProperties)
+                    {
+                        query = query.Include(includeProperty); 
+                    }
+                }
+
+                var entity = await query.FirstOrDefaultAsync();
                 return entity;
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }

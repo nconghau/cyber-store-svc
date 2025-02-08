@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace DotnetApiPostgres.Api.Models.Entities;
 
@@ -31,7 +32,7 @@ public class Order
     [Required]
     public decimal TotalAmount { get; set; }
 
-    // Ref OrderItem Many to 
+    // Ref OrderItem Many to
     public List<OrderItem> OrderItems { get; set; }
 }
 
@@ -61,5 +62,6 @@ public class OrderItem
     public required string OrderId { get; set; }
 
     [ForeignKey("OrderId")]
+    [JsonIgnore]
     public Order Order { get; set; }
 }

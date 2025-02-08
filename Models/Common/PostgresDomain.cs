@@ -1,5 +1,4 @@
-﻿using System;
-namespace DotnetApiPostgres.Api.Models.Common
+﻿namespace DotnetApiPostgres.Api.Models.Common
 {
     public class PostgresQuery
     {
@@ -26,11 +25,11 @@ namespace DotnetApiPostgres.Api.Models.Common
     public class PostgresDataSource<T>
     {
         public bool Success { get; set; }
-        public int Total { get; set; }  // Total number of records in the database
-        public int PageNumber { get; set; }  // Current page number
-        public int PageSize { get; set; }  // Items per page
-        public IEnumerable<T> Data { get; set; }  // List of data for the current page
-        public string Message { get; set; }  // Optional message for the response
+        public int Total { get; set; } 
+        public int PageNumber { get; set; }  
+        public int PageSize { get; set; }  
+        public List<T>? Data { get; set; } = new List<T>();
+        public string? Message { get; set; } 
     }
 }
 
