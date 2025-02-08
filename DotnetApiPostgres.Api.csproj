@@ -24,6 +24,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Telegram.Bot" Version="22.3.0" />
     <PackageReference Include="Google.Cloud.Diagnostics.AspNetCore3" Version="5.2.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +48,7 @@
     <None Remove="Private\" />
     <None Remove="Services\Common\" />
     <None Remove="Behaviors\" />
+    <None Remove="Auth\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
@@ -67,5 +70,6 @@
     <Folder Include="Private\" />
     <Folder Include="Services\Common\" />
     <Folder Include="Behaviors\" />
+    <Folder Include="Auth\" />
   </ItemGroup>
 </Project>

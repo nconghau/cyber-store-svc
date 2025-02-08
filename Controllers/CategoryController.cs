@@ -1,3 +1,4 @@
+using DotnetApiPostgres.Api.Auth;
 using DotnetApiPostgres.Api.Mediator.Commands.Admin;
 using DotnetApiPostgres.Api.Mediator.Queries.Web;
 using DotnetApiPostgres.Api.Models.Common;
@@ -11,6 +12,7 @@ namespace DotnetApiPostgres.Api.Models;
 
 [ApiController]
 [Route("api/[controller]/[action]")]
+[Auth("ADMIN,USER")]
 public class CategoryController : ControllerBase
 {
     private readonly IMediator _mediator;

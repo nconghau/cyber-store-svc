@@ -7,7 +7,7 @@ using DotnetApiPostgres.Api.Services.TelegramBot;
 
 // add services
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddCommonServices();
+builder.Services.AddCommonServices(builder.Configuration);
 
 var scriptMigrationPostgres = false; // script: dotnet ef migrations add _ / dotnet ef database update
 builder.Services.AddPostgresServices(builder.Configuration, scriptMigrationPostgres);
@@ -29,6 +29,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 app.MapControllers();
+
 DatabaseMigrationService.ApplyMigrations(app.Services);
 if (!scriptMigrationPostgres)
 {
