@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using DotnetApiPostgres.Api.Models.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DotnetApiPostgres.Api.Repository
 {
@@ -16,6 +17,8 @@ namespace DotnetApiPostgres.Api.Repository
         Task UpdateManyAsync(IEnumerable<TEntity> entities);
         Task<PostgresDataSource<TEntity>> GetByQueryAsync(PostgresQuery query, Func<TEntity, bool>? filter = null);
         Task<TEntity?> GetByFieldQueryAsync(string field, object value);
+        Task<int> SaveChangesAsync();
+        Task<IDbContextTransaction> BeginTransactionAsync();
     }
 
     public class PostgresRepository<TEntity, TKey> : IPostgresRepository<TEntity, TKey> where TEntity : class
@@ -136,7 +139,7 @@ namespace DotnetApiPostgres.Api.Repository
                 }
 
                 // Apply sorting dynamically using reflection
-                if (!string.IsNullOrEmpty(query.Sort.Field))
+                if (!string.IsNullOrEmpty(query?.Sort?.Field))
                 {
                     var sortField = query.Sort.Field;
                     var sortOrder = query.Sort.Order.ToLower();
@@ -203,6 +206,16 @@ namespace DotnetApiPostgres.Api.Repository
             {
                 return null;
             }
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _context.Database.BeginTransactionAsync();
         }
     }
 }

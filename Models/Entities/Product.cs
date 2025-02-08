@@ -44,5 +44,5 @@ public class Product
     public string Description { get; set; } = string.Empty;
 
     [Column(TypeName = "json")]
-    public string Properties { get; set; } = "[]";
+    public string Properties { get; set; } = "[]"; // search Properties + Redis
 }

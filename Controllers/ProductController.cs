@@ -356,9 +356,12 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<PostgresDataSource<Product>> GetProductByQuery([FromBody] GetProductByQuery data)
+    public async Task<PostgresDataSource<Product>> GetProductByQuery([FromBody] PostgresQuery query)
     {
-        var jsonResponse = await _mediator.Send(data);
+        var jsonResponse = await _mediator.Send(new GetProductByQuery()
+        {
+            Query = query
+        });
         return jsonResponse;
     }
 

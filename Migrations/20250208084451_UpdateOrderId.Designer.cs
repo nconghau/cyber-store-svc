@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotnetApiPostgres.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250202040052_ChangeOrderDateType")]
-    partial class ChangeOrderDateType
+    [Migration("20250208084451_UpdateOrderId")]
+    partial class UpdateOrderId
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,8 +55,16 @@ namespace DotnetApiPostgres.Api.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
+                    b.Property<string>("OrderAddress")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<long>("OrderDate")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
 
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(10, 2)");
@@ -64,6 +72,36 @@ namespace DotnetApiPostgres.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Order");
+                });
+
+            modelBuilder.Entity("DotnetApiPostgres.Api.Models.Entities.OrderItem", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(24)");
+
+                    b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasColumnType("varchar(24)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Qty")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("DotnetApiPostgres.Api.Models.Entities.Product", b =>
@@ -112,6 +150,22 @@ namespace DotnetApiPostgres.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("DotnetApiPostgres.Api.Models.Entities.OrderItem", b =>
+                {
+                    b.HasOne("DotnetApiPostgres.Api.Models.Entities.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("DotnetApiPostgres.Api.Models.Entities.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

@@ -13,12 +13,12 @@ namespace DotnetApiPostgres.Api.Mappings
             {
                 Id = entity.Id,
                 CustomerName = entity.CustomerName,
+                Phone = entity.Phone,
                 Email = entity.Email,
-                TotalAmount = entity.TotalAmount,
                 OrderDate = entity.OrderDate,
-                //ShipMethod = entity.ShippingAddress != null ? entity.ShippingAddress.Country : string.Empty, // Example of how you can map shipMethod
-                //Items = entity.Items?.Select(item => item.ToItemDto()).ToList(), // Map Items
-                //Address = entity.ShippingAddress?.ToAddressDto() // Map Address
+                OrderAddress = entity.OrderAddress,
+                TotalAmount = entity.TotalAmount,
+                OrderItems = entity.OrderItems?.Select(oi => oi.ToOrderItemDto()).ToList()
             };
         }
 
@@ -29,61 +29,40 @@ namespace DotnetApiPostgres.Api.Mappings
             {
                 Id = dto.Id ?? IdGenerator.GenerateId(),
                 CustomerName = dto.CustomerName,
+                Phone = dto.Phone,
                 Email = dto.Email,
-                TotalAmount = dto.TotalAmount,
                 OrderDate = dto.OrderDate,
-                //ShippingAddress = dto.Address?.ToAddress(), // Map Address
-                //Items = dto.Items?.Select(itemDto => itemDto.ToOrderItem()).ToList() // Map Items
+                OrderAddress = dto.OrderAddress,
+                TotalAmount = dto.TotalAmount,
+                OrderItems = dto.OrderItems?.Select(oi => oi.ToOrderItem()).ToList()
             };
         }
 
-        // Map Item entity to ItemDTO
-        public static ItemDTO ToItemDto(this OrderItem entity)
+        // Map OrderItem entity to OrderItemDTO
+        public static OrderItemDTO ToOrderItemDto(this OrderItem entity)
         {
-            return new ItemDTO
+            return new OrderItemDTO
             {
-                ProductId = entity.OrderItemId,
+                Id = entity.Id,
+                ProductId = entity.ProductId,
                 ProductName = entity.ProductName,
-                Quantity = entity.Quantity,
-                Price = entity.Price
+                Price = entity.Price,
+                Qty = entity.Qty,
+                OrderId = entity.OrderId
             };
         }
 
-        // Map ItemDTO to OrderItem entity
-        public static OrderItem ToOrderItem(this ItemDTO dto)
+        // Map OrderItemDTO to OrderItem entity
+        public static OrderItem ToOrderItem(this OrderItemDTO dto)
         {
             return new OrderItem
             {
-                OrderItemId = dto.ProductId,
+                Id = dto.Id ?? IdGenerator.GenerateId(),
+                ProductId = dto.ProductId,
                 ProductName = dto.ProductName,
-                Quantity = dto.Quantity,
-                Price = dto.Price
-            };
-        }
-
-        // Map Address entity to AddressDTO
-        public static AddressDTO ToAddressDto(this Address entity)
-        {
-            return new AddressDTO
-            {
-                Street = entity.Street,
-                City = entity.City,
-                State = entity.State,
-                PostalCode = entity.PostalCode,
-                Country = entity.Country
-            };
-        }
-
-        // Map AddressDTO to Address entity
-        public static Address ToAddress(this AddressDTO dto)
-        {
-            return new Address
-            {
-                Street = dto.Street,
-                City = dto.City,
-                State = dto.State,
-                PostalCode = dto.PostalCode,
-                Country = dto.Country
+                Price = dto.Price,
+                Qty = dto.Qty,
+                OrderId = dto.OrderId
             };
         }
     }

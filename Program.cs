@@ -21,8 +21,7 @@ builder.Services.AddHttpClient();
 // notify
 builder.Services.AddSingleton<ITelegramBotClient>(new TelegramBotClient("7943487167:AAEVML1jEvj-lB2--try2QJfW0xiGp531xY"));
 
-var enabledKafka = true;
-var scriptMigration = false; // script: dotnet ef migrations add _ / dotnet ef database update
+var scriptMigrationPostgres = false; // script: dotnet ef migrations add _ / dotnet ef database update
 
 // env
 string postgresConnection = builder.Configuration["PostgresConnection"];
@@ -32,7 +31,7 @@ var kafkaNumPartitions = int.Parse(builder.Configuration["KafkaNumPartitions"] ?
 var kafkaNumConsumers = int.Parse(builder.Configuration["KafkaNumConsumers"] ?? "1");
 string kafkaGroupId = builder.Configuration["KafkaGroupId"];
 
-if (scriptMigration)
+if (scriptMigrationPostgres)
 {
     postgresConnection = "Host=14.225.204.163;Port=5332;Database=cyber_store;Username=cyber_store;Password=cyber_store";
 }
@@ -51,7 +50,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddTransient(typeof(IPostgresRepository<,>), typeof(PostgresRepository<,>));
 
 
-if (enabledKafka)
+if (!scriptMigrationPostgres)
 {
     // kafka
     builder.Services.AddSingleton(new KafkaAdminService(kafkaBroker));
@@ -96,7 +95,7 @@ builder.Services.TryAddSingleton<ICacheService, CacheService>();
 var app = builder.Build();
 
 // init kafka
-if (enabledKafka)
+if (!scriptMigrationPostgres)
 {
     using (var scope = app.Services.CreateScope())
     {

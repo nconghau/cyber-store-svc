@@ -80,9 +80,12 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<PostgresDataSource<Category>> GetCategoryByQuery([FromBody] GetCategoryByQuery data)
+    public async Task<PostgresDataSource<Category>> GetCategoryByQuery([FromBody] PostgresQuery query)
     {
-        var jsonResponse = await _mediator.Send(data);
+        var jsonResponse = await _mediator.Send(new GetCategoryByQuery()
+        {
+            Query = query
+        });
         return jsonResponse;
     }
 

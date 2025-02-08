@@ -10,49 +10,56 @@ public class Order
     [Column(TypeName = "varchar(24)")]
     [Required]
     public required string Id { get; set; }
+
     [Column(TypeName = "varchar(255)")]
     [Required]
     public string CustomerName { get; set; }
+
     [Column(TypeName = "varchar(255)")]
     public string Email { get; set; }
+
+    [Column(TypeName = "varchar(50)")]
+    public string Phone { get; set; }
+
+    [Required]
+    public long OrderDate { get; set; }
+
+    [Required]
+    public string OrderAddress { get; set; }
+
     [Column(TypeName = "decimal(10, 2)")]
     [Required]
     public decimal TotalAmount { get; set; }
-    public long OrderDate { get; set; }
 
-    // Navigation property for the related Address
-    //public Address ShippingAddress { get; set; } // Assuming one-to-one relation
-    //public ICollection<OrderItem> Items { get; set; }
+    // Ref OrderItem Many to 
+    public List<OrderItem> OrderItems { get; set; }
 }
 
-
-//[Table("Address")]
-public class Address
-{
-    public int AddressId { get; set; } // Primary key for Address
-    public string Street { get; set; }
-    public string City { get; set; }
-    public string State { get; set; }
-    public string PostalCode { get; set; }
-    public string Country { get; set; }
-
-    // Foreign key for the related order
-    public string OrderId { get; set; } // Foreign key pointing to Order
-
-    // Navigation property back to the Order
-    public Order Order { get; set; }
-}
-
-
-//[Table("OrderItem")]
+[Table("OrderItem")]
 public class OrderItem
 {
-    public string OrderItemId { get; set; } // Primary key for OrderItem
-    public string OrderId { get; set; } // Foreign key pointing to Order
+    [Key]
+    [Column(TypeName = "varchar(24)")]
+    [Required]
+    public required string Id { get; set; }
+
+    [Required]
+    public string ProductId { get; set; }
+
+    [Required]
     public string ProductName { get; set; }
-    public int Quantity { get; set; }
+
+    [Required]
     public decimal Price { get; set; }
 
-    // Navigation property back to the Order
+    [Required]
+    public int Qty { get; set; }
+
+    // Ref Order
+    [Required]
+    [Column(TypeName = "varchar(24)")]
+    public required string OrderId { get; set; }
+
+    [ForeignKey("OrderId")]
     public Order Order { get; set; }
 }

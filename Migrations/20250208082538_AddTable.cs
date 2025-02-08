@@ -5,7 +5,7 @@
 namespace DotnetApiPostgres.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class ChangeOrderDateType : Migration
+    public partial class AddTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,8 +30,10 @@ namespace DotnetApiPostgres.Api.Migrations
                     Id = table.Column<string>(type: "varchar(24)", nullable: false),
                     CustomerName = table.Column<string>(type: "varchar(255)", nullable: false),
                     Email = table.Column<string>(type: "varchar(255)", nullable: false),
-                    TotalAmount = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
-                    OrderDate = table.Column<long>(type: "bigint", nullable: false)
+                    Phone = table.Column<string>(type: "varchar(50)", nullable: false),
+                    OrderDate = table.Column<long>(type: "bigint", nullable: false),
+                    OrderAddress = table.Column<string>(type: "text", nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "numeric(10,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,6 +60,33 @@ namespace DotnetApiPostgres.Api.Migrations
                 {
                     table.PrimaryKey("PK_Product", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "OrderItem",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "varchar(24)", nullable: false),
+                    ProductId = table.Column<string>(type: "text", nullable: false),
+                    ProductName = table.Column<string>(type: "text", nullable: false),
+                    Price = table.Column<decimal>(type: "numeric", nullable: false),
+                    Qty = table.Column<int>(type: "integer", nullable: false),
+                    OrderId = table.Column<string>(type: "varchar(24)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OrderItem_Order_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Order",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItem_OrderId",
+                table: "OrderItem",
+                column: "OrderId");
         }
 
         /// <inheritdoc />
@@ -67,10 +96,13 @@ namespace DotnetApiPostgres.Api.Migrations
                 name: "Category");
 
             migrationBuilder.DropTable(
-                name: "Order");
+                name: "OrderItem");
 
             migrationBuilder.DropTable(
                 name: "Product");
+
+            migrationBuilder.DropTable(
+                name: "Order");
         }
     }
 }

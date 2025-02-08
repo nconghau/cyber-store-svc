@@ -99,8 +99,8 @@ namespace DotnetApiPostgres.Api.Services.Kafka
                     switch (consumeResult.Topic)
                     {
                         case "k_order_2":
-                            var data = new CreateOrderCommand { data = JsonSerializer.Deserialize<OrderDTO>(consumeResult?.Message.Value) };
-                            if (data?.data != null)
+                            var data = new CreateOrderCommand { Data = JsonSerializer.Deserialize<OrderDTO>(consumeResult?.Message.Value) };
+                            if (data?.Data != null)
                             {
                                 Task.Run(() => CallCreateOrderApi(data)); 
                             }
@@ -119,7 +119,7 @@ namespace DotnetApiPostgres.Api.Services.Kafka
         private async Task CallCreateOrderApi(CreateOrderCommand data)
         {
             using var client = _httpClientFactory.CreateClient();
-            var apiUrl = "https://localhost:7294/api/Order/CreateOrder"; 
+            var apiUrl = "https://localhost:7294/api/Order/CreateOrder"; // change to Domain
             var jsonContent = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
 
             try
@@ -141,27 +141,46 @@ namespace DotnetApiPostgres.Api.Services.Kafka
 
                         var message = new StringBuilder();
                         message.AppendLine("✅ <b>Order created successfully!</b>");
-                        message.AppendLine("=================================================");
+                        message.AppendLine("=========================");
 
                         foreach (var property in typeof(OrderDTO).GetProperties())
                         {
                             object rawValue = property.GetValue(order);
-                            string value;
-
-                            if (property.Name == "OrderDate" && rawValue is long timestamp)
+                            switch (property.Name)
                             {
-                                var dateTime = DateTimeOffset.FromUnixTimeSeconds(timestamp).ToLocalTime().DateTime;
-                                value = dateTime.ToString("HH:mm dd/MM/yyyy");
+                                case "OrderDate":
+                                    if(rawValue is long timestamp)
+                                    {
+                                        var dateTime = DateTimeOffset.FromUnixTimeSeconds(timestamp).ToLocalTime().DateTime;
+                                        message.AppendLine($"- {property.Name}: <b>{dateTime.ToString("HH:mm dd/MM/yyyy")}</b>");
+                                    }
+                                    break;
+                                case "OrderItems":
+                                    if (rawValue is List<OrderItemDTO> orderItems && orderItems.Any())
+                                    {
+                                        var orderItemsString = string.Join(Environment.NewLine,
+                                            orderItems.Select(item =>
+                                                $"\n\t+ ProductName: <b>{item.ProductName}</b>" +
+                                                $"\n\t+ ProductId: <b>{item.ProductId}</b>" +
+                                                $"\n\t+ Price: <b>{item.Price}</b>" +
+                                                $"\n\t+ Qty: <b>{item.Qty}</b>"
+                                            )
+                                        );
+                                        message.AppendLine($"- {property.Name}: {orderItemsString}");
+                                    }
+                                    else
+                                    {
+                                        message.AppendLine($"- {property.Name}: <b>No items</b>");
+                                    }
+                                    break;
+                                default:
+                                    var value = rawValue?.ToString() ?? "N/A";
+                                    message.AppendLine($"- {property.Name}: <b>{value}</b>");
+                                    break;
                             }
-                            else
-                            {
-                                value = rawValue?.ToString() ?? "N/A";
-                            }
-
-                            message.AppendLine($"- {property.Name}: <b>{value}</b>");
                         }
 
-                        message.AppendLine("=================================================");
+                        message.AppendLine("=========================");
 
                         // Send message
                         _ = _mediator.Send(new SendTextMessageTelegramBotCommand()
@@ -174,10 +193,12 @@ namespace DotnetApiPostgres.Api.Services.Kafka
                 {
                     // Send message
                     var message = new StringBuilder();
+                    var responseFail = await response.Content.ReadAsStringAsync();
                     message.AppendLine("❌ <b>Failed to create order!</b>");
-                    message.AppendLine("=================================================");
+                    message.AppendLine("=========================");
                     message.AppendLine($"Status Code: {response.StatusCode}");
-                    message.AppendLine("=================================================");
+                    message.AppendLine($"Response: {responseFail}");
+                    message.AppendLine("=========================");
 
                     _ = _mediator.Send(new SendTextMessageTelegramBotCommand()
                     {
@@ -191,9 +212,9 @@ namespace DotnetApiPostgres.Api.Services.Kafka
                 // Send message
                 var message = new StringBuilder();
                 message.AppendLine("❌ <b>Failed to create order!</b>");
-                message.AppendLine("=================================================");
+                message.AppendLine("=========================");
                 message.AppendLine($"Exception: {ex.Message}");
-                message.AppendLine("=================================================");
+                message.AppendLine("=========================");
 
                 _ = _mediator.Send(new SendTextMessageTelegramBotCommand()
                 {
