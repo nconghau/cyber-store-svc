@@ -16,6 +16,7 @@ namespace CyberStoreSVC.Services.Kafka
         private readonly List<string> _topics = new List<string>();
         private readonly int _numConsumers;
         private readonly CancellationTokenSource _cts = new();
+        // private readonly string ApiUrlOrderSVC = "https://localhost:7294/api/Order/CreateOrder";
         private readonly string ApiUrlOrderSVC = "http://14.225.204.163:7295/api/Order/CreateOrder";
 
         public KafkaConsumerService(

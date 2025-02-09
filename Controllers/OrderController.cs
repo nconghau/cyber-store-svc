@@ -63,6 +63,15 @@ public class OrderController : ControllerBase
     }
 
     [HttpPost]
+    public async Task<bool> CreateOrderQueue([FromBody] CreateOrderCommand data)
+    {
+        var kafkaTopic = _configuration["KafkaTopic"];
+        var jsonOrder = JsonSerializer.Serialize(data.Data);
+        _ = _kafkaProducerService.ProduceAsync(kafkaTopic, jsonOrder);
+        return true;
+    }
+
+    [HttpPost]
     public async Task<PostgresDataSource<Order>> GetOrderByQuery([FromBody] PostgresQuery query)
     {
         var jsonResponse = await _mediator.Send(new GetOrderByQuery()
