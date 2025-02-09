@@ -11,17 +11,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace DotnetApiPostgres.Api.Models;
 
 [ApiController]
-[Route("api/[controller]/[action]")]
-[Auth("ADMIN,USER")]
-public class CategoryController : ControllerBase
+[Route("api/admin/[controller]/[action]")]
+[Auth("ADMIN")]
+public class CategoryAdminController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly ILogger<CategoryController> _logger;
 
-    public CategoryController(IMediator mediator, ILogger<CategoryController> logger)
+    public CategoryAdminController(IMediator mediator)
     {
         _mediator = mediator;
-        _logger = logger;
     }
 
     [HttpPost]

@@ -1,9 +1,11 @@
 ﻿using System.Reflection;
 using System.Text;
 using BuildingBlocks.Application.Behaviors;
+using DotnetApiPostgres.Api.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace DotnetApiPostgres.Api.Services.Common
 {
@@ -27,7 +29,33 @@ namespace DotnetApiPostgres.Api.Services.Common
                     };
                 });
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(op =>
+            {
+                op.OperationFilter<AuthHeaderOperatorFilter>();
+                op.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer"
+                });
+
+                op.AddSecurityRequirement(new OpenApiSecurityRequirement
+                    {
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer"
+                                }
+                            },
+                            new string[] {}
+                        }
+                    });
+            });
             services.AddControllers();
             services.AddHttpClient();
 

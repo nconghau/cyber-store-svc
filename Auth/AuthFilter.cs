@@ -10,14 +10,14 @@ namespace DotnetApiPostgres.Api.Auth
     {
         public AuthAttribute(string roles) : base(typeof(AuthFilter))
         {
-            Arguments = new object[] { roles };  // Pass the roles as an argument
+            Arguments = new object[] { roles };  
         }
     }
 
     public class AuthFilter : IAsyncAuthorizationFilter
     {
         private readonly IConfiguration _configuration;
-        private readonly string _roles; // To store the roles
+        private readonly string _roles; 
 
         public AuthFilter(IConfiguration configuration, string roles)
         {
@@ -28,7 +28,6 @@ namespace DotnetApiPostgres.Api.Auth
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             var authHeader = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault();
-            //authHeader = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdmMiOiJjeWJlcl9zdG9yZV9zdmMiLCJ1c2VyTmFtZSI6ImhhdW5jIiwiciI6IkFETUlOLFVTRVIiLCJuYmYiOjE3MzkwMzI4NTYsImV4cCI6MTczOTExOTI1NiwiaWF0IjoxNzM5MDMyODU2fQ.jRzE2dQRZctAk4dKg5ZRuhpgrnlZqPiEfeP4adPAW4M";
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
             {
                 context.Result = new JsonResult(new { errorCode = "401" }) { StatusCode = 200 };

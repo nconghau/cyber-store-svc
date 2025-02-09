@@ -1,4 +1,5 @@
 using System.Text.Json;
+using DotnetApiPostgres.Api.Auth;
 using DotnetApiPostgres.Api.Mediator.Commands.Admin;
 using DotnetApiPostgres.Api.Mediator.Queries.Web;
 using DotnetApiPostgres.Api.Models.Common;
@@ -11,16 +12,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace DotnetApiPostgres.Api.Models;
 
 [ApiController]
-[Route("api/[controller]/[action]")]
-public class ProductController : ControllerBase
+[Route("api/admin/[controller]/[action]")]
+[Auth("ADMIN")]
+public class ProductAdminController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly ILogger<ProductController> _logger;
 
-    public ProductController(IMediator mediator, ILogger<ProductController> logger)
+    public ProductAdminController(IMediator mediator)
     {
         _mediator = mediator;
-        _logger = logger;
     }
 
     [HttpPost]
