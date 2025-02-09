@@ -7,7 +7,7 @@ namespace DotnetApiPostgres.Api.Mediator.Commands.Notify
 {
     public sealed class SendTextMessageTelegramBotCommand : ICommand<Unit>
     {
-        public long ChatId { get; set; } = 1606079782;
+        public long ChatId { get; set; } = -1002357176977;
         public string Message { get; set; } = "";
     }
 
