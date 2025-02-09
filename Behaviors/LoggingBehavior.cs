@@ -12,6 +12,8 @@ namespace BuildingBlocks.Application.Behaviors
         private readonly ILogger<LoggingBehaviour<TRequest, TResponse>> _logger;
         private readonly string _controllerName;
         private readonly string _actionName;
+        private readonly string _userAgent;
+
         public LoggingBehaviour(IHttpContextAccessor httpContextAccessor, ILogger<LoggingBehaviour<TRequest, TResponse>> logger)
         {
             _httpContextAccessor = httpContextAccessor;
@@ -19,48 +21,52 @@ namespace BuildingBlocks.Application.Behaviors
             _userName = httpContextAccessor.HttpContext?.GetRouteValue("userName")?.ToString() ?? "";
             _controllerName = httpContextAccessor.HttpContext?.GetRouteValue("controller")?.ToString() ?? "";
             _actionName = httpContextAccessor.HttpContext?.GetRouteValue("action")?.ToString() ?? "";
-
+            _userAgent = httpContextAccessor.HttpContext?.Request.Headers["User-Agent"].ToString() ?? "Unknown";
         }
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            //Request
+            // Request
             var start = Stopwatch.GetTimestamp();
             var messageId = Guid.NewGuid().ToString();
             var response = await next();
             try
             {
-                //Response
+                // Response
                 var latency = $"{Math.Round((Stopwatch.GetTimestamp() - start) * 1000 / (double)Stopwatch.Frequency)}ms";
                 try
                 {
-                    _logger.LogInformation(JsonSerializer.Serialize(new {
+                    _logger.LogInformation(JsonSerializer.Serialize(new
+                    {
                         time = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
                         name = "mediator-logging",
                         controller = _controllerName,
                         action = _actionName,
                         mediator = $"{typeof(TRequest).Name}",
                         userName = _userName,
+                        userAgent = _userAgent, 
                         messageId,
                         request,
                         responseSuccess = ((dynamic)response).Success,
                         responseErrorCode = ((dynamic)response).ErrorCode,
-                        latency },
-                        JsonSerializerOptionCommon.Create()));
+                        latency
+                    }, JsonSerializerOptionCommon.Create()));
                 }
                 catch (Exception)
                 {
-                    _logger.LogInformation(JsonSerializer.Serialize(new {
+                    _logger.LogInformation(JsonSerializer.Serialize(new
+                    {
                         time = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
                         name = "mediator-logging",
                         controller = _controllerName,
                         action = _actionName,
                         mediator = $"{typeof(TRequest).Name}",
                         userName = _userName,
+                        userAgent = _userAgent, 
                         messageId,
                         request,
-                        latency },
-                        JsonSerializerOptionCommon.Create()));
+                        latency
+                    }, JsonSerializerOptionCommon.Create()));
                 }
 
                 if (_httpContextAccessor.HttpContext != null)
@@ -70,7 +76,7 @@ namespace BuildingBlocks.Application.Behaviors
             }
             catch (Exception)
             {
-
+                _logger.LogError("Error occurred while logging request.");
             }
 
             return response;
