@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DotnetApiPostgres.Api.Auth
+namespace CyberStoreSVC.Auth
 {
     public class AuthAttribute : TypeFilterAttribute
     {

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DotnetApiPostgres.Api.Models.Entities;
+namespace CyberStoreSVC.Models.Entities;
 
 [Table("Product")]
 public class Product

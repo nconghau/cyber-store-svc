@@ -1,26 +1,27 @@
 # Use the official .NET 8 SDK image to build the application
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+# Use the official .NET 8 SDK image to build the application
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copy the project files to the container
+COPY ["CyberStoreSVC/CyberStoreSVC.csproj", "CyberStoreSVC/"]
+RUN dotnet restore "CyberStoreSVC/CyberStoreSVC.csproj"
+
+# Copy the rest of the code and build it
+COPY . .
+WORKDIR "/src/CyberStoreSVC"
+RUN dotnet build "CyberStoreSVC.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "CyberStoreSVC.csproj" -c Release -o /app/publish
+
+# Final stage to run the app
+FROM base AS final
 WORKDIR /app
-
-# Copy the project files and restore dependencies
-COPY DotnetApiPostgres.Api.csproj ./
-RUN dotnet restore
-
-# Copy the rest of the application files and build
-COPY . ./
-RUN dotnet publish -c Release -o out
-
-# Use the ASP.NET Core runtime image to run the application
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
-WORKDIR /app
-COPY --from=build /app/out .
-
-# Set the environment variable to Development (this can be adjusted if necessary)
-ENV ASPNETCORE_ENVIRONMENT Development
-
-# Expose both HTTP and HTTPS ports as per the launchSettings.json
-EXPOSE 5106
-EXPOSE 7294
-
-# Start the application
-ENTRYPOINT ["dotnet", "DotnetApiPostgres.Api.dll"]
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "CyberStoreSVC.dll"]

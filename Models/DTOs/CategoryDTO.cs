@@ -1,4 +1,4 @@
-namespace DotnetApiPostgres.Api.Models.DTOs;
+namespace CyberStoreSVC.Models.DTOs;
 
 public class CategoryDTO
 {

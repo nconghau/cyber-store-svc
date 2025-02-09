@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace DotnetApiPostgres.Api.Models.Entities;
+namespace CyberStoreSVC.Models.Entities;
 
 [Table("Order")]
 public class Order

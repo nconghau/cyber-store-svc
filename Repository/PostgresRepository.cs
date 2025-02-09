@@ -1,9 +1,9 @@
 ﻿using System.Linq.Expressions;
-using DotnetApiPostgres.Api.Models.Common;
+using CyberStoreSVC.Models.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace DotnetApiPostgres.Api.Repository
+namespace CyberStoreSVC.Repository
 {
     public interface IPostgresRepository<TEntity, TKey> where TEntity : class
     {

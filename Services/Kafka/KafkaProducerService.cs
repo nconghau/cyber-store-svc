@@ -1,6 +1,6 @@
 ﻿using Confluent.Kafka;
 
-namespace DotnetApiPostgres.Api.Services.Kafka
+namespace CyberStoreSVC.Services.Kafka
 {
     public class KafkaProducerService
     {

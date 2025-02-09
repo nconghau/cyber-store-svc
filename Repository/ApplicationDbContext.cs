@@ -1,7 +1,7 @@
-using DotnetApiPostgres.Api.Models.Entities;
+using CyberStoreSVC.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace DotnetApiPostgres.Api;
+namespace CyberStoreSVC;
 
 public class ApplicationDbContext : DbContext
 {

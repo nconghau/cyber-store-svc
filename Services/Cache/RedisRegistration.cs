@@ -1,8 +1,8 @@
-﻿using DotnetApiPostgres.Api.Services.Cache;
+﻿using CyberStoreSVC.Services.Cache;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using StackExchange.Redis;
 
-namespace DotnetApiPostgres.Api.Services.Redis
+namespace CyberStoreSVC.Services.Redis
 {
     public static class RedisRegistration
 	{

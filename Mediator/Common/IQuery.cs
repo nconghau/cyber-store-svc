@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace DotnetApiPostgres.Api.Mediator.Common
+namespace CyberStoreSVC.Mediator.Common
 {
     public interface IQuery<out TResponse> : IRequest<TResponse>
     {

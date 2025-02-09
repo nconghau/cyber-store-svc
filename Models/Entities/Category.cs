@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DotnetApiPostgres.Api.Models.DTOs;
+using CyberStoreSVC.Models.DTOs;
 
-namespace DotnetApiPostgres.Api.Models.Entities;
+namespace CyberStoreSVC.Models.Entities;
 
 [Table("Category")]
 public class Category

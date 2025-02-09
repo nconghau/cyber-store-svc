@@ -3,7 +3,7 @@ using Google.Cloud.Diagnostics.Common;
 using Google.Cloud.Logging.V2;
 using Google.Cloud.Trace.V1;
 
-namespace DotnetApiPostgres.Api.Services.GoogleServices
+namespace CyberStoreSVC.Services.GoogleServices
 {
     public static class GoogleServicesRegistration
 	{

@@ -1,13 +1,13 @@
 ﻿using System.Reflection;
 using System.Text;
 using BuildingBlocks.Application.Behaviors;
-using DotnetApiPostgres.Api.Auth;
+using CyberStoreSVC.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
-namespace DotnetApiPostgres.Api.Services.Common
+namespace CyberStoreSVC.Services.Common
 {
     public static class CommonRegistration
 	{

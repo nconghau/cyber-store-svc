@@ -1,4 +1,4 @@
-﻿namespace DotnetApiPostgres.Api.Utils
+﻿namespace CyberStoreSVC.Utils
 {
     public static class IdGenerator
     {

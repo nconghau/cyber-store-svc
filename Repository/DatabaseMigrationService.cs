@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace DotnetApiPostgres.Api.Repository
+namespace CyberStoreSVC.Repository
 {
     public static class DatabaseMigrationService
     {

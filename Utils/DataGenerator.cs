@@ -1,7 +1,7 @@
 ﻿using Bogus;
-using DotnetApiPostgres.Api.Models.DTOs;
+using CyberStoreSVC.Models.DTOs;
 
-namespace DotnetApiPostgres.Api.Utils
+namespace CyberStoreSVC.Utils
 {
     public static class DataGenerator
 	{

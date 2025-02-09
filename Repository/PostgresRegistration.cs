@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
-namespace DotnetApiPostgres.Api.Repository
+namespace CyberStoreSVC.Repository
 {
     public static class PostgresRegistration
 	{

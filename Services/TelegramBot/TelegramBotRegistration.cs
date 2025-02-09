@@ -1,6 +1,6 @@
 ﻿using Telegram.Bot;
 
-namespace DotnetApiPostgres.Api.Services.TelegramBot
+namespace CyberStoreSVC.Services.TelegramBot
 {
     public static class TelegramBotRegistration
 	{

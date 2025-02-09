@@ -1,11 +1,11 @@
-using DotnetApiPostgres.Api.Mediator.Queries.Web;
-using DotnetApiPostgres.Api.Models.Common;
-using DotnetApiPostgres.Api.Models.DTOs;
-using DotnetApiPostgres.Api.Models.Entities;
+using CyberStoreSVC.Mediator.Queries.Web;
+using CyberStoreSVC.Models.Common;
+using CyberStoreSVC.Models.DTOs;
+using CyberStoreSVC.Models.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DotnetApiPostgres.Api.Models;
+namespace CyberStoreSVC.Models;
 
 [ApiController]
 [Route("api/[controller]/[action]")]

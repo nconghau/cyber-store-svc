@@ -1,8 +1,8 @@
-using DotnetApiPostgres.Api.Auth;
+using CyberStoreSVC.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DotnetApiPostgres.Api.Models;
+namespace CyberStoreSVC.Models;
 
 [ApiController]
 [Route("api/[controller]/[action]")]

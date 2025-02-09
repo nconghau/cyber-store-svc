@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka;
 using Confluent.Kafka.Admin;
 
-namespace DotnetApiPostgres.Api.Services.Kafka
+namespace CyberStoreSVC.Services.Kafka
 {
     public class KafkaAdminService
     {

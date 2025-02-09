@@ -1,4 +1,4 @@
-﻿namespace DotnetApiPostgres.Api.Services.Kafka
+﻿namespace CyberStoreSVC.Services.Kafka
 {
     public class KafkaBackgroundService : BackgroundService
     {

@@ -1,7 +1,7 @@
-﻿using DotnetApiPostgres.Api.Models.DTOs;
-using DotnetApiPostgres.Api.Models.Entities;
+﻿using CyberStoreSVC.Models.DTOs;
+using CyberStoreSVC.Models.Entities;
 
-namespace DotnetApiPostgres.Api.Mappings;
+namespace CyberStoreSVC.Mappings;
 
 public static class CategoryMappings
 {

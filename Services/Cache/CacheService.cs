@@ -2,7 +2,7 @@
 using System.Buffers;
 using System.Text.Json;
 
-namespace DotnetApiPostgres.Api.Services.Cache
+namespace CyberStoreSVC.Services.Cache
 {
     internal sealed class CacheService(IDistributedCache cache) : ICacheService
     {

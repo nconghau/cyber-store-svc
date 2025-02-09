@@ -1,14 +1,14 @@
-using DotnetApiPostgres.Api.Auth;
-using DotnetApiPostgres.Api.Mediator.Commands.Admin;
-using DotnetApiPostgres.Api.Mediator.Queries.Web;
-using DotnetApiPostgres.Api.Models.Common;
-using DotnetApiPostgres.Api.Models.DTOs;
-using DotnetApiPostgres.Api.Models.Entities;
-using DotnetApiPostgres.Api.Utils;
+using CyberStoreSVC.Auth;
+using CyberStoreSVC.Mediator.Commands.Admin;
+using CyberStoreSVC.Mediator.Queries.Web;
+using CyberStoreSVC.Models.Common;
+using CyberStoreSVC.Models.DTOs;
+using CyberStoreSVC.Models.Entities;
+using CyberStoreSVC.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DotnetApiPostgres.Api.Models;
+namespace CyberStoreSVC.Models;
 
 [ApiController]
 [Route("api/admin/[controller]/[action]")]

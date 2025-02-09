@@ -1,4 +1,4 @@
-﻿namespace DotnetApiPostgres.Api.Services.Cache
+﻿namespace CyberStoreSVC.Services.Cache
 {
     public interface ICacheService
     {

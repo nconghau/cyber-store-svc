@@ -1,9 +1,9 @@
-﻿using DotnetApiPostgres.Api.Mediator.Common;
+﻿using CyberStoreSVC.Mediator.Common;
 using MediatR;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 
-namespace DotnetApiPostgres.Api.Mediator.Commands.Notify
+namespace CyberStoreSVC.Mediator.Commands.Notify
 {
     public sealed class SendTextMessageTelegramBotCommand : ICommand<Unit>
     {

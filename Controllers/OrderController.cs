@@ -1,16 +1,16 @@
 using System.Text.Json;
 using Bogus;
-using DotnetApiPostgres.Api.Mediator.Commands.Web;
-using DotnetApiPostgres.Api.Mediator.Queries.Web;
-using DotnetApiPostgres.Api.Models.Common;
-using DotnetApiPostgres.Api.Models.DTOs;
-using DotnetApiPostgres.Api.Models.Entities;
-using DotnetApiPostgres.Api.Services.Kafka;
-using DotnetApiPostgres.Api.Utils;
+using CyberStoreSVC.Mediator.Commands.Web;
+using CyberStoreSVC.Mediator.Queries.Web;
+using CyberStoreSVC.Models.Common;
+using CyberStoreSVC.Models.DTOs;
+using CyberStoreSVC.Models.Entities;
+using CyberStoreSVC.Services.Kafka;
+using CyberStoreSVC.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DotnetApiPostgres.Api.Models;
+namespace CyberStoreSVC.Models;
 
 [ApiController]
 [Route("api/[controller]/[action]")]

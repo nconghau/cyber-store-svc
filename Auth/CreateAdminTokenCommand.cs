@@ -1,11 +1,11 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using DotnetApiPostgres.Api.Mediator.Common;
+using CyberStoreSVC.Mediator.Common;
 using FluentValidation;
 using Microsoft.IdentityModel.Tokens;
 
-namespace DotnetApiPostgres.Api.Auth
+namespace CyberStoreSVC.Auth
 {
     public sealed class CreateAdminTokenCommand : ICommand<string>
     {

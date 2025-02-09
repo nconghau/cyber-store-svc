@@ -1,9 +1,9 @@
-using DotnetApiPostgres.Api.Repository;
-using DotnetApiPostgres.Api.Services.Common;
-using DotnetApiPostgres.Api.Services.GoogleServices;
-using DotnetApiPostgres.Api.Services.Kafka;
-using DotnetApiPostgres.Api.Services.Redis;
-using DotnetApiPostgres.Api.Services.TelegramBot;
+using CyberStoreSVC.Repository;
+using CyberStoreSVC.Services.Common;
+using CyberStoreSVC.Services.GoogleServices;
+using CyberStoreSVC.Services.Kafka;
+using CyberStoreSVC.Services.Redis;
+using CyberStoreSVC.Services.TelegramBot;
 
 // add services
 var builder = WebApplication.CreateBuilder(args);

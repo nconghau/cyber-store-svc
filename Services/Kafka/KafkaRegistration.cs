@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace DotnetApiPostgres.Api.Services.Kafka
+namespace CyberStoreSVC.Services.Kafka
 {
     public static class KafkaRegistration
     {

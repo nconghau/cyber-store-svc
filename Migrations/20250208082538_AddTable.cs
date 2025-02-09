@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace DotnetApiPostgres.Api.Migrations
+namespace CyberStoreSVC.Migrations
 {
     /// <inheritdoc />
     public partial class AddTable : Migration

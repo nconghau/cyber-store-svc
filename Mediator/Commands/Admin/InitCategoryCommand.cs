@@ -1,13 +1,13 @@
-﻿using DotnetApiPostgres.Api.Mappings;
-using DotnetApiPostgres.Api.Mediator.Common;
-using DotnetApiPostgres.Api.Models.Common;
-using DotnetApiPostgres.Api.Models.DTOs;
-using DotnetApiPostgres.Api.Models.Entities;
-using DotnetApiPostgres.Api.Repository;
+﻿using CyberStoreSVC.Mappings;
+using CyberStoreSVC.Mediator.Common;
+using CyberStoreSVC.Models.Common;
+using CyberStoreSVC.Models.DTOs;
+using CyberStoreSVC.Models.Entities;
+using CyberStoreSVC.Repository;
 using FluentValidation;
 using MediatR;
 
-namespace DotnetApiPostgres.Api.Mediator.Commands.Admin
+namespace CyberStoreSVC.Mediator.Commands.Admin
 {
     public sealed class InitCateroryCommand : ICommand<JsonResponse<List<Category>>>
     {

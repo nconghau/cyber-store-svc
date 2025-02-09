@@ -1,10 +1,10 @@
-﻿using DotnetApiPostgres.Api.Mediator.Common;
-using DotnetApiPostgres.Api.Models.Common;
-using DotnetApiPostgres.Api.Models.Entities;
-using DotnetApiPostgres.Api.Repository;
+﻿using CyberStoreSVC.Mediator.Common;
+using CyberStoreSVC.Models.Common;
+using CyberStoreSVC.Models.Entities;
+using CyberStoreSVC.Repository;
 using MediatR;
 
-namespace DotnetApiPostgres.Api.Mediator.Queries.Web
+namespace CyberStoreSVC.Mediator.Queries.Web
 {
     public sealed class GetCategoryByQuery : IQuery<PostgresDataSource<Category>>
     {

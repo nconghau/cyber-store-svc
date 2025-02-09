@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 
-namespace DotnetApiPostgres.Api.Services.Cache
+namespace CyberStoreSVC.Services.Cache
 {
     public static class CacheOptions
     {

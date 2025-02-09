@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace DotnetApiPostgres.Api.Auth
+namespace CyberStoreSVC.Auth
 {
     public sealed class AuthHeaderOperatorFilter : IOperationFilter
     {

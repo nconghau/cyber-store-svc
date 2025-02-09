@@ -1,12 +1,12 @@
 ﻿using System.Text;
 using System.Text.Json;
 using Confluent.Kafka;
-using DotnetApiPostgres.Api.Mediator.Commands.Notify;
-using DotnetApiPostgres.Api.Mediator.Commands.Web;
-using DotnetApiPostgres.Api.Models.DTOs;
+using CyberStoreSVC.Mediator.Commands.Notify;
+using CyberStoreSVC.Mediator.Commands.Web;
+using CyberStoreSVC.Models.DTOs;
 using MediatR;
 
-namespace DotnetApiPostgres.Api.Services.Kafka
+namespace CyberStoreSVC.Services.Kafka
 {
     public class KafkaConsumerService : IHostedService
     {

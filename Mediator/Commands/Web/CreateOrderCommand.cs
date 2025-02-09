@@ -1,16 +1,16 @@
 ﻿using System.Text;
-using DotnetApiPostgres.Api.Mappings;
-using DotnetApiPostgres.Api.Mediator.Commands.Notify;
-using DotnetApiPostgres.Api.Mediator.Common;
-using DotnetApiPostgres.Api.Models.Common;
-using DotnetApiPostgres.Api.Models.DTOs;
-using DotnetApiPostgres.Api.Models.Entities;
-using DotnetApiPostgres.Api.Repository;
-using DotnetApiPostgres.Api.Utils;
+using CyberStoreSVC.Mappings;
+using CyberStoreSVC.Mediator.Commands.Notify;
+using CyberStoreSVC.Mediator.Common;
+using CyberStoreSVC.Models.Common;
+using CyberStoreSVC.Models.DTOs;
+using CyberStoreSVC.Models.Entities;
+using CyberStoreSVC.Repository;
+using CyberStoreSVC.Utils;
 using FluentValidation;
 using MediatR;
 
-namespace DotnetApiPostgres.Api.Mediator.Commands.Web
+namespace CyberStoreSVC.Mediator.Commands.Web
 {
     public sealed class CreateOrderCommand : ICommand<JsonResponse<OrderDTO>>
     {

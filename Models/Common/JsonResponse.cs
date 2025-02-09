@@ -1,4 +1,4 @@
-﻿namespace DotnetApiPostgres.Api.Models.Common
+﻿namespace CyberStoreSVC.Models.Common
 {
     public class JsonResponse<T>
     {

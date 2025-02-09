@@ -1,8 +1,8 @@
-﻿using DotnetApiPostgres.Api.Models.DTOs;
-using DotnetApiPostgres.Api.Models.Entities;
-using DotnetApiPostgres.Api.Utils;
+﻿using CyberStoreSVC.Models.DTOs;
+using CyberStoreSVC.Models.Entities;
+using CyberStoreSVC.Utils;
 
-namespace DotnetApiPostgres.Api.Mappings
+namespace CyberStoreSVC.Mappings
 {
     public static class OrderMappings
     {
