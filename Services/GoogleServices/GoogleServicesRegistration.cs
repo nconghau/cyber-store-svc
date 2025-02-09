@@ -7,7 +7,8 @@ namespace CyberStoreSVC.Services.GoogleServices
 {
     public static class GoogleServicesRegistration
 	{
-        private static readonly string _credentialsPath = "./Private/cyber_store_gcp_logs.json";
+        private static readonly string _privateFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Private");
+        private static readonly string _credentialsPath = Path.Combine(_privateFolder, "cyber_store_gcp_logs.json");
         private static readonly string _projectId = "poised-conduit-450311-j7";
         private static readonly string _serviceName = "cyber_store_svc";
 

@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     container_name: postgres
@@ -14,6 +16,11 @@ services:
     networks:
       - db
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1g"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"]
       interval: 30s
@@ -38,11 +45,11 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://14.225.204.163:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL: SASL_PLAINTEXT
       KAFKA_LISTENER_SASL_MECHANISM: PLAIN
-      KAFKA_LISTENER_SASL_USERNAME: ${KAFKA_USERNAME}     
-      KAFKA_LISTENER_SASL_PASSWORD: ${KAFKA_PASSWORD}     
+      KAFKA_LISTENER_SASL_USERNAME: ${KAFKA_USERNAME}
+      KAFKA_LISTENER_SASL_PASSWORD: ${KAFKA_PASSWORD}
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
@@ -51,6 +58,11 @@ services:
     networks:
       - kafka
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.8"
+          memory: "1g"
     healthcheck:
       test: ["CMD", "broker-api-versions", "--bootstrap-server", "localhost:9092"]
       interval: 30s
@@ -65,13 +77,48 @@ services:
       - "6379:6379"
     volumes:
       - cyberstore_redis_data:/data/cyber_store
+    networks:
+      - redis
+
+  cyber-store-svc:
+    container_name: cyber-store-svc
+    image: haucoder/cyber-store-svc:1.0.1
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      PostgresConnection: "Host=14.225.204.163;Port=5332;Database=cyber_store;Username=cyber_store;Password=cyber_store"
+      KafkaBroker: "14.225.204.163:9092"
+      KafkaTopic: "k_order_2"
+      KafkaNumPartitions: "4"
+      KafkaNumConsumers: "4"
+      KafkaGroupId: "k_order_2_groupId"
+      AuthFilterToken: "token-nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCokUihg-staging"
+    depends_on:
+      - db
+      - kafka
+      - redis
+    ports:
+      - "7295:7295"
+    volumes:
+      - ./Private:/app/Private
+    networks:
+      - db
+      - kafka
+      - redis
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: "1.5g"
 
 networks:
   db:
     driver: bridge
   kafka:
     driver: bridge
+  redis:
+    driver: bridge
 
 volumes:
   db:
-  cyberstore_redis_data: 
+  cyberstore_redis_data:

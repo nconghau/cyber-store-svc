@@ -16,6 +16,7 @@ namespace CyberStoreSVC.Services.Kafka
         private readonly List<string> _topics = new List<string>();
         private readonly int _numConsumers;
         private readonly CancellationTokenSource _cts = new();
+        private readonly string ApiUrlOrderSVC = "http://14.225.204.163:7295/api/Order/CreateOrder";
 
         public KafkaConsumerService(
             IHttpClientFactory httpClientFactory,
@@ -120,12 +121,11 @@ namespace CyberStoreSVC.Services.Kafka
         private async Task CallCreateOrder(CreateOrderCommand data)
         {
             using var client = _httpClientFactory.CreateClient();
-            var apiUrl = "https://localhost:7294/api/Order/CreateOrder"; // change to Domain
             var jsonContent = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
 
             try
             {
-                var response = await client.PostAsync(apiUrl, jsonContent);
+                var response = await client.PostAsync(ApiUrlOrderSVC, jsonContent);
                 if (!response.IsSuccessStatusCode)
                 {
                     // Send message
