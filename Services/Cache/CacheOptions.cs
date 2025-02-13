@@ -6,12 +6,14 @@ namespace CyberStoreSVC.Services.Cache
     {
         public static DistributedCacheEntryOptions DefaultExpiration => new()
         {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(2)
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60)
         };
 
-        public static DistributedCacheEntryOptions Create(TimeSpan? expiration) =>
-            expiration is not null
+        public static DistributedCacheEntryOptions Create(TimeSpan? expiration)
+        {
+            return expiration is not null
                 ? new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = expiration }
                 : DefaultExpiration;
+        }
     }
 }

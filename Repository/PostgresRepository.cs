@@ -15,8 +15,8 @@ namespace CyberStoreSVC.Repository
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task AddManyAsync(IEnumerable<TEntity> entities);
         Task UpdateManyAsync(IEnumerable<TEntity> entities);
-        Task<PostgresDataSource<TEntity>> GetByQueryAsync(PostgresQuery query, Func<TEntity, bool>? filter = null, List<string> includeProperties = null);
-        Task<TEntity?> GetByFieldQueryAsync(string field, object value, List<string> includeProperties = null);
+        Task<PostgresDataSource<TEntity>> GetByQueryAsync(PostgresQuery query, Func<TEntity, bool>? filter = null, List<string>? includeProperties = null);
+        Task<TEntity?> GetByFieldQueryAsync(string field, object value, List<string>? includeProperties = null);
         Task<int> SaveChangesAsync();
         Task<IDbContextTransaction> BeginTransactionAsync();
     }
@@ -83,7 +83,7 @@ namespace CyberStoreSVC.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PostgresDataSource<TEntity>> GetByQueryAsync(PostgresQuery query, Func<TEntity, bool> filter = null, List<string> includeProperties = null)
+        public async Task<PostgresDataSource<TEntity>> GetByQueryAsync(PostgresQuery query, Func<TEntity, bool>? filter = null, List<string>? includeProperties = null)
         {
             try
             {
@@ -100,17 +100,17 @@ namespace CyberStoreSVC.Repository
                         Expression filterExpression = criteria.Type switch
                         {
                             "equal" => Expression.Equal(property, Expression.Constant(criteria.Value.ToString())),
-                            //"list" when criteria.Value is IEnumerable<string> list =>
-                            //    Expression.Call(
-                            //        typeof(Enumerable),
-                            //        "Contains",
-                            //        new[] { property.Type },
-                            //        Expression.Constant(list),
-                            //        property),
                             "range" when criteria.Value is List<int> range && range.Count == 2 =>
                                 Expression.AndAlso(
                                     Expression.GreaterThanOrEqual(property, Expression.Constant(range[0])),
                                     Expression.LessThanOrEqual(property, Expression.Constant(range[1]))),
+                            "ids" when criteria.Value is IEnumerable<TKey> ids => 
+                                Expression.Call(
+                                    typeof(Enumerable),
+                                    "Contains",
+                                    new[] { property.Type },
+                                    Expression.Constant(ids),
+                                    property),
                             _ => throw new InvalidOperationException($"Unsupported criteria type: {criteria.Type}")
                         };
 
@@ -167,6 +167,7 @@ namespace CyberStoreSVC.Repository
                 // Apply pagination (skip and take)
                 var totalRecords = await queryable.CountAsync();
 
+                queryable = queryable.AsNoTracking();
 
                 var pagedData = await queryable.Skip((query.PageNumber - 1) * query.PageSize)
                                                .Take(query.PageSize)
@@ -174,6 +175,7 @@ namespace CyberStoreSVC.Repository
 
                 var dataSource = new PostgresDataSource<TEntity>
                 {
+                    Success = true,
                     Total = totalRecords,
                     PageNumber = query.PageNumber,
                     PageSize = query.PageSize,
@@ -188,13 +190,17 @@ namespace CyberStoreSVC.Repository
                 return new PostgresDataSource<TEntity>
                 {
                     Success = false,
+                    Total = 0,
+                    PageNumber = query.PageNumber,
+                    PageSize = query.PageSize,
+                    Data = new List<TEntity>(),
                     Message = "An error occurred while processing the query. " + ex.Message
                 };
             }
         }
 
 
-        public async Task<TEntity?> GetByFieldQueryAsync(string field, object value, List<string> includeProperties = null)
+        public async Task<TEntity?> GetByFieldQueryAsync(string field, object value, List<string>? includeProperties = null)
         {
             try
             {

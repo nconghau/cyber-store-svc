@@ -20,6 +20,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Telegram.Bot" Version="22.3.0" />
@@ -49,6 +50,7 @@
     <None Remove="Services\Common\" />
     <None Remove="Behaviors\" />
     <None Remove="Auth\" />
+    <None Remove="File\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
@@ -71,5 +73,6 @@
     <Folder Include="Services\Common\" />
     <Folder Include="Behaviors\" />
     <Folder Include="Auth\" />
+    <Folder Include="File\" />
   </ItemGroup>
 </Project>

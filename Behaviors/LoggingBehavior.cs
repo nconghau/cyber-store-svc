@@ -47,8 +47,8 @@ namespace BuildingBlocks.Application.Behaviors
                         userAgent = _userAgent, 
                         messageId,
                         request,
-                        responseSuccess = ((dynamic)response).Success,
-                        responseErrorCode = ((dynamic)response).ErrorCode,
+                        responseSuccess = ((dynamic)response).Success ?? ((dynamic)response).success,
+                        responseErrorCode = ((dynamic)response).ErrorCode ?? ((dynamic)response).errorCode,
                         latency
                     }, JsonSerializerOptionCommon.Create()));
                 }

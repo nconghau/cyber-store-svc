@@ -10,7 +10,7 @@ using CyberStoreSVC.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CyberStoreSVC.Models;
+namespace CyberStoreSVC.Controllers;
 
 [ApiController]
 [Route("api/[controller]/[action]")]

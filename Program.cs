@@ -27,7 +27,7 @@ if (!scriptMigrationPostgres)
 {
     builder.Services.AddKafkaServices(builder.Configuration);
 }
-builder.Services.AddRedisServices(builder.Configuration);
+builder.Services.AddRedisServices();
 builder.Services.AddGoogleDiagnosticsServices();
 builder.Services.AddTelegramBotServices();
 

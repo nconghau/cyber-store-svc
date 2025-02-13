@@ -1,27 +1,34 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
-using System.Buffers;
+﻿using System.Buffers;
 using System.Text.Json;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace CyberStoreSVC.Services.Cache
 {
-    internal sealed class CacheService(IDistributedCache cache) : ICacheService
+    internal sealed class CacheService : ICacheService
     {
+        private readonly IDistributedCache _cache;
+
+        public CacheService(IDistributedCache cache)
+        {
+            _cache = cache;
+        }
+
         public async Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default)
         {
-            var bytes = await cache.GetAsync(key, cancellationToken);
-
+            var bytes = await _cache.GetAsync(key, cancellationToken);
             return bytes is null ? default : Deserialize<T>(bytes);
         }
 
         public Task SetAsync<T>(string key, T value, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
         {
             var bytes = Serialize(value);
-
-            return cache.SetAsync(key, bytes, CacheOptions.Create(expiration), cancellationToken);
+            return _cache.SetAsync(key, bytes, CacheOptions.Create(expiration), cancellationToken);
         }
 
-        public Task RemoveAsync(string key, CancellationToken cancellationToken = default) =>
-            cache.RemoveAsync(key, cancellationToken);
+        public Task RemoveAsync(string key, CancellationToken cancellationToken = default)
+        {
+            return _cache.RemoveAsync(key, cancellationToken);
+        }
 
         private static byte[] Serialize<T>(T value)
         {
