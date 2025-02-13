@@ -46,6 +46,7 @@ ENTRYPOINT ["dotnet", "/app/publish/CyberStoreSVC.dll"]
 # docker run -d -p 7295:7295 --name cyber-store-svc cyber-store-svc
 # docker run -d -p 80:80 -p 443:443 --name cyber-store-svc cyber-store-svc
 
+# Build VPS
 # docker login --username=haucoder
 # docker buildx build --platform linux/amd64 -t haucoder/cyber-store-svc:1.0.0 .
 # docker push haucoder/cyber-store-svc:1.0.0
