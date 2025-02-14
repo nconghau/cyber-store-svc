@@ -1,52 +1,41 @@
-# TestLocal:: the official .NET SDK as a base image
+# 🏗️ **Stage 1: Build the application**
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-# Set the working directory in the container
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the .csproj file to the container's working directory
-COPY CyberStoreSVC.csproj ./CyberStoreSVC.csproj
+# Copy only the project file (to leverage Docker caching)
+COPY CyberStoreSVC.csproj ./
 
-# Restore the NuGet packages
+# Restore dependencies
 RUN dotnet restore "./CyberStoreSVC.csproj"
 
-# Copy the rest of the project files to the container
+# Copy the rest of the project files
 COPY . .
 
-# Build the project
+# Build the application
 RUN dotnet build "CyberStoreSVC.csproj" -c Release -o /app/build
 
-# Publish the project to the /app/publish folder
+# Publish the application (creates a self-contained app)
 RUN dotnet publish "CyberStoreSVC.csproj" -c Release -o /app/publish
 
-# Set environment variables for the container
-ENV ASPNETCORE_ENVIRONMENT=Development \
-    PostgresConnection="Host=14.225.204.163;Port=5332;Database=cyber_store;Username=cyber_store;Password=cyber_store" \
-    KafkaBroker="14.225.204.163:9092" \
-    KafkaTopic="k_order_2" \
-    KafkaNumPartitions="4" \
-    KafkaNumConsumers="4" \
-    KafkaGroupId="k_order_2_groupId" \
-    AuthFilterToken="token-nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCokUihg-staging" \
-    ASPNETCORE_URLS="http://+:7295"
-    # ASPNETCORE_URLS="http://+:80;https://+:443"  
+# 🏗️ **Stage 2: Run the application with a lightweight runtime**
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 
-# TestLocal::Expose port 7295
+# Set the working directory
+WORKDIR /app
+
+# Copy published files from the build stage
+COPY --from=build /app/publish .
+
+# Copy the Private directory from the build stage
+COPY Private/cyber_store_gcp_logs.json /app/Private/cyber_store_gcp_logs.json
+
+# 🔹 Load environment variables from `.env` (via `docker-compose`)
+ENV ASPNETCORE_URLS="http://+:7295"
+
+# Expose port 7295
 EXPOSE 7295
 
-# Expose ports 80 and 443 for HTTP and HTTPS access
-# EXPOSE 80
-# EXPOSE 443
-
-# Set the entry point for the container
-ENTRYPOINT ["dotnet", "/app/publish/CyberStoreSVC.dll"]
-
-# TestLocal::Srcipt
-# docker build -t cyber-store-svc .
-# docker run -d -p 7295:7295 --name cyber-store-svc cyber-store-svc
-# docker run -d -p 80:80 -p 443:443 --name cyber-store-svc cyber-store-svc
-
-# Build VPS
-# docker login --username=haucoder
-# docker buildx build --platform linux/amd64 -t haucoder/cyber-store-svc:1.0.0 .
-# docker push haucoder/cyber-store-svc:1.0.0
+# Set the entry point
+ENTRYPOINT ["dotnet", "CyberStoreSVC.dll"]

@@ -85,16 +85,9 @@ services:
 
   cyber-store-svc:
     container_name: cyber-store-svc
-    image: haucoder/cyber-store-svc:1.0.1
-    environment:
-      ASPNETCORE_ENVIRONMENT: Development
-      PostgresConnection: "Host=14.225.204.163;Port=5332;Database=cyber_store;Username=cyber_store;Password=cyber_store"
-      KafkaBroker: "14.225.204.163:9092"
-      KafkaTopic: "k_order_2"
-      KafkaNumPartitions: "4"
-      KafkaNumConsumers: "4"
-      KafkaGroupId: "k_order_2_groupId"
-      AuthFilterToken: "token-nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCokUihg-staging"
+    image: haucoder/cyber-store-svc:${SVC_VERSION}
+    env_file:
+      - .env 
     depends_on:
       - db
       - kafka
