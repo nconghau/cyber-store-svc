@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  cyber-store-svc:
+    image: haucoder/cyber-store-svc:${SVC_VERSION}
+    env_file:
+      - .env 
+    environment:
+      - ASPNETCORE_URLS=http://+:7295
+    ports:
+      - "7295:7295"
+    networks:
+      - db
+      - kafka
+      - redis
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: any
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: "1.5g"
+
+networks:
+  db:
+    driver: overlay
+  kafka:
+    driver: overlay
+  redis:
+    driver: overlay

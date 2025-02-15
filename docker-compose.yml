@@ -83,56 +83,6 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD} 
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"] 
 
-  cyber-store-svc:
-    container_name: cyber-store-svc
-    image: haucoder/cyber-store-svc:${SVC_VERSION}
-    env_file:
-      - .env 
-    environment:
-      - ASPNETCORE_URLS=http://+:7295
-    depends_on:
-      - db
-      - kafka
-      - redis
-    ports:
-      - "7295:7295"
-    volumes:
-      - ./Private:/app/Private
-    networks:
-      - db
-      - kafka
-      - redis
-    restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: "1.5"
-          memory: "1.5g"
-
-  # cyber-store-svc-2:
-  #   container_name: cyber-store-svc-2
-  #   image: haucoder/cyber-store-svc:${SVC_VERSION}
-  #   env_file:
-  #     - .env
-  #   environment:
-  #     - ASPNETCORE_URLS=http://+:7296
-  #   depends_on:
-  #     - db
-  #     - kafka
-  #     - redis
-  #   ports:
-  #     - "7296:7296"
-  #   networks:
-  #     - db
-  #     - kafka
-  #     - redis
-  #   restart: unless-stopped
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: "1.5"
-  #         memory: "1.5g"
-
 networks:
   db:
     driver: bridge
