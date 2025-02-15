@@ -39,16 +39,18 @@ namespace BuildingBlocks.Application.Behaviors
                     _logger.LogInformation(JsonSerializer.Serialize(new
                     {
                         time = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
-                        name = "mediator-logging",
                         controller = _controllerName,
                         action = _actionName,
                         mediator = $"{typeof(TRequest).Name}",
                         userName = _userName,
-                        userAgent = _userAgent, 
-                        messageId,
-                        request,
                         responseSuccess = ((dynamic)response).Success ?? ((dynamic)response).success,
                         responseErrorCode = ((dynamic)response).ErrorCode ?? ((dynamic)response).errorCode,
+                        request,
+                        messageId,
+                        name = "mediator-logs",
+                        userAgent = _userAgent, 
+                        env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"),
+                        port = _httpContextAccessor.HttpContext?.Connection.LocalPort,
                         latency
                     }, JsonSerializerOptionCommon.Create()));
                 }
@@ -57,14 +59,16 @@ namespace BuildingBlocks.Application.Behaviors
                     _logger.LogInformation(JsonSerializer.Serialize(new
                     {
                         time = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
-                        name = "mediator-logging",
                         controller = _controllerName,
                         action = _actionName,
                         mediator = $"{typeof(TRequest).Name}",
                         userName = _userName,
-                        userAgent = _userAgent, 
-                        messageId,
                         request,
+                        messageId,
+                        name = "mediator-logs",
+                        userAgent = _userAgent, 
+                        env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"),
+                        port = _httpContextAccessor.HttpContext?.Connection.LocalPort,
                         latency
                     }, JsonSerializerOptionCommon.Create()));
                 }

@@ -41,17 +41,17 @@ namespace CyberStoreSVC.Mediator.Queries.Web
 
         public async Task<PostgresDataSource<Product>> Handle(GetProductByQuery request, CancellationToken cancellationToken)
         {
-            string postgresQueryRedisKey = RedisKeyBuilder.GeneratePostgresQueryRedisKey(request.Query);
-            var cachedProductIds = await _cacheService.GetAsync<List<string>>(postgresQueryRedisKey);
+            string cacheKey = RedisKeyBuilder.GeneratePostgresQueryRedisKey("GetCategoryByQuery", request.Query);
+            var cacheValues = await _cacheService.GetAsync<List<string>>(cacheKey);
 
-            if(cachedProductIds?.Count() > 0)
+            if(cacheValues?.Count() > 0)
             {
                 request.Query.Criteria = new List<PostgresCriteria>()
                 {
                     new PostgresCriteria()
                     {
                         Field = "id",
-                        Value = cachedProductIds,
+                        Value = cacheValues,
                         Type = "ids",
                     }
                 };
@@ -59,12 +59,12 @@ namespace CyberStoreSVC.Mediator.Queries.Web
                 if (resultByIds.Success == true) 
                 {
                     // remove cache when data change
-                    if (resultByIds?.Data?.Count() != cachedProductIds?.Count() || resultByIds?.Total != cachedProductIds?.Count())
+                    if (resultByIds?.Data?.Count() != cacheValues?.Count() || resultByIds?.Total != cacheValues?.Count())
                     {
-                        _ = _cacheService.RemoveAsync(postgresQueryRedisKey);
+                        _ = _cacheService.RemoveAsync(cacheKey);
                     }
 
-                    resultByIds.Message += " | Cached";
+                    resultByIds.Message += " (Cached)";
                     return resultByIds;
                 }
             }
@@ -72,7 +72,8 @@ namespace CyberStoreSVC.Mediator.Queries.Web
             var result = await _repository.GetByQueryAsync(request.Query);
             if(result?.Data?.Count() > 0)
             {
-                _ = _cacheService.SetAsync(postgresQueryRedisKey, result.Data.Select(s=>s.Id).ToList(), TimeSpan.FromMinutes(60));
+                // cache productIds
+                _ = _cacheService.SetAsync(cacheKey, result.Data.Select(s=>s.Id).ToList(), TimeSpan.FromMinutes(60));
             }
 
             return result;

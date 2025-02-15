@@ -7,7 +7,7 @@ namespace CyberStoreSVC.Services.Cache
 {
     public static class RedisKeyBuilder
 	{
-        public static string GeneratePostgresQueryRedisKey(PostgresQuery? query)
+        public static string GeneratePostgresQueryRedisKey(string prefix, PostgresQuery? query)
         {
             var sortedQuery = new PostgresQuery
             {
@@ -22,7 +22,7 @@ namespace CyberStoreSVC.Services.Cache
 
             string hash = ComputeMD5Hash(jsonString);
 
-            return $"PostgresQuery::{hash}";
+            return $"{prefix}_{hash}";
         }
 
         private static string ComputeMD5Hash(string input)
