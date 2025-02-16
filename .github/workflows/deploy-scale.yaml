@@ -1,0 +1,31 @@
+name: Scale Deployment
+
+on:
+  push:
+    tags:
+      - '*-scale-*'  # Triggers on any tag ending with '-scale-NUM'
+
+jobs:
+  scale:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract Image Tag and Scale Number
+        run: |
+          FULL_TAG=${GITHUB_REF#refs/tags/}
+          IMAGE_TAG=$(echo $FULL_TAG | sed -E 's/-scale-[0-9]+//')  # Remove '-scale-NUM'
+          SCALE_NUM=$(echo $FULL_TAG | grep -oE '[0-9]+$')  # Extract last number
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          echo "SCALE_NUM=$SCALE_NUM" >> $GITHUB_ENV
+
+      - name: Scale Deployment on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          script: |
+            cd ${{ secrets.VPS_DEPLOY_PATH }}
+            ./vps-scale-swarm.sh ${{ env.IMAGE_TAG }} ${{ env.SCALE_NUM }} > ${{ secrets.VPS_DEPLOY_PATH }}/scale.log 2>&1 &
