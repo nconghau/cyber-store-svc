@@ -40,6 +40,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
           script: |
-            cd /opt/docker-setup/
-            ./vps-deploy-swarm.sh ${{ env.IMAGE_TAG }}
+            cd ${{ secrets.VPS_DEPLOY_PATH }}
+            ./vps-deploy-swarm.sh ${{ env.IMAGE_TAG }} > ${{ secrets.VPS_DEPLOY_PATH }}/deploy.log 2>&1 &
+
     
