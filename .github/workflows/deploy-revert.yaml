@@ -1,0 +1,29 @@
+name: Rollback Deployment
+
+on:
+  push:
+    tags:
+      - '*-revert'  # Triggers on any tag ending with '-revert'
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract Original Version from Rollback Tag
+        run: |
+          ORIGINAL_TAG=${GITHUB_REF#refs/tags/}
+          ORIGINAL_TAG=${ORIGINAL_TAG%-revert}  # Remove '-revert' suffix
+          echo "ROLLBACK_TAG=$ORIGINAL_TAG" >> $GITHUB_ENV
+
+      - name: Rollback Deployment on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          script: |
+            cd ${{ secrets.VPS_DEPLOY_PATH }}
+            ./vps-deploy-swarm.sh ${{ env.ROLLBACK_TAG }} > ${{ secrets.VPS_DEPLOY_PATH }}/rollback.log 2>&1 &
