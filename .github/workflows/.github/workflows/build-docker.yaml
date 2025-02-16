@@ -1,18 +1,48 @@
 name: Build and Publish image to Docker Hub
+
 on:
   push:
     branches:
       - master
+      - develop
+    tags:
+      - '*'  # Runs when a Git tag is pushed
+
 jobs:
   publish_images:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: build image
+        with:
+          fetch-depth: 0  # Fetch all history to get the latest tag
+
+      - name: Extract Image Tag
+        id: version
         run: |
-          docker buildx build --platform linux/amd64 -t haucoder/cyber-store-svc:latest
-      - name: push image to docker hub
+          # Extract tag from GitHub ref
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            TAG=${GITHUB_REF#refs/tags/}
+          else
+            # Get latest Git tag
+            TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "1.0.0")
+            if [[ $GITHUB_REF == refs/heads/master ]]; then
+              TAG="$TAG-prod"
+            elif [[ $GITHUB_REF == refs/heads/develop ]]; then
+              TAG="$TAG-dev"
+            fi
+          fi
+          echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
+          echo "Using Image Tag: $TAG"
+
+      - name: Build and Push Docker Image
         run: |
+          docker buildx build --platform linux/amd64 -t haucoder/cyber-store-svc:${{ env.IMAGE_TAG }} .
+          
           docker login -u haucoder -p ${{ secrets.DOCKER_HUB_TOKEN }}
-          docker push haucoder/cyber-store-svc:latest
+          docker push haucoder/cyber-store-svc:${{ env.IMAGE_TAG }}
+
+          if [[ $GITHUB_REF == refs/heads/master ]]; then
+            docker tag haucoder/cyber-store-svc:${{ env.IMAGE_TAG }} haucoder/cyber-store-svc:latest
+            docker push haucoder/cyber-store-svc:latest
+          fi
