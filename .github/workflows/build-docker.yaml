@@ -2,47 +2,38 @@ name: Build and Publish image to Docker Hub
 
 on:
   push:
-    branches:
-      - master
-      - develop
     tags:
-      - '*'  # Runs when a Git tag is pushed
+      - '*-dev'   # Runs when pushing tags ending in '-dev'
+      - '*-prod'  # Runs when pushing tags ending in '-prod'
 
 jobs:
   publish_images:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Fetch all history to get the latest tag
 
-      - name: Extract Image Tag
-        id: version
-        run: |
-          # Extract tag from GitHub ref
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            TAG=${GITHUB_REF#refs/tags/}
-          else
-            # Get latest Git tag
-            TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "1.0.0")
-            if [[ $GITHUB_REF == refs/heads/master ]]; then
-              TAG="$TAG-prod"
-            elif [[ $GITHUB_REF == refs/heads/develop ]]; then
-              TAG="$TAG-dev"
-            fi
-          fi
-          echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
-          echo "Using Image Tag: $TAG"
+      - name: Extract tag name
+        id: get_tag
+        run: echo "IMAGE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
-      - name: Build and Push Docker Image
+      - name: Build Docker image (for -dev)
+        if: contains(env.IMAGE_TAG, '-dev')
         run: |
+          docker buildx create --use
           docker buildx build --platform linux/amd64 -t haucoder/cyber-store-svc:${{ env.IMAGE_TAG }} .
-          
-          docker login -u haucoder -p ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Build Docker images (for -prod and latest)
+        if: contains(env.IMAGE_TAG, '-prod')
+        run: |
+          docker buildx create --use
+          docker buildx build --platform linux/amd64 -t haucoder/cyber-store-svc:${{ env.IMAGE_TAG }} -t haucoder/cyber-store-svc:latest .
+
+      - name: Push image to Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u haucoder --password-stdin
           docker push haucoder/cyber-store-svc:${{ env.IMAGE_TAG }}
 
-          if [[ $GITHUB_REF == refs/heads/master ]]; then
-            docker tag haucoder/cyber-store-svc:${{ env.IMAGE_TAG }} haucoder/cyber-store-svc:latest
-            docker push haucoder/cyber-store-svc:latest
-          fi
+      - name: Push latest image (only for -prod)
+        if: contains(env.IMAGE_TAG, '-prod')
+        run: docker push haucoder/cyber-store-svc:latest
