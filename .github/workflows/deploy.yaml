@@ -10,24 +10,36 @@ jobs:
   publish_images:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      # - name: Checkout code
+      #   uses: actions/checkout@v4
 
-      - name: Extract tag name
-        id: get_tag
-        run: echo "IMAGE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+      # - name: Extract tag name
+      #   id: get_tag
+      #   run: echo "IMAGE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
-      - name: Build Docker image (for -dev)
-        if: contains(env.IMAGE_TAG, '-dev')
-        run: |
-          docker buildx build --platform linux/amd64 -t haucoder/cyber-store-svc:${{ env.IMAGE_TAG }} .
+      # - name: Build Docker image (for -dev)
+      #   if: contains(env.IMAGE_TAG, '-dev')
+      #   run: |
+      #     docker buildx build --platform linux/amd64 -t haucoder/cyber-store-svc:${{ env.IMAGE_TAG }} .
 
-      - name: Build Docker images (for -prod and latest)
+      # - name: Build Docker images (for -prod and latest)
+      #   if: contains(env.IMAGE_TAG, '-prod')
+      #   run: |
+      #     docker buildx build --platform linux/amd64 -t haucoder/cyber-store-svc:${{ env.IMAGE_TAG }} .
+
+      # - name: Push image to Docker Hub
+      #   run: |
+      #     docker login -u haucoder -p ${{ secrets.DOCKER_HUB_TOKEN }}
+      #     docker push haucoder/cyber-store-svc:${{ env.IMAGE_TAG }}
+      
+      - name: Deploy to VPS (Only for -prod)
         if: contains(env.IMAGE_TAG, '-prod')
-        run: |
-          docker buildx build --platform linux/amd64 -t haucoder/cyber-store-svc:${{ env.IMAGE_TAG }} .
-
-      - name: Push image to Docker Hub
-        run: |
-          docker login -u haucoder -p ${{ secrets.DOCKER_HUB_TOKEN }}
-          docker push haucoder/cyber-store-svc:${{ env.IMAGE_TAG }}
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/docker-setup/
+            ./vps-deploy-swarm.sh ${{ env.IMAGE_TAG }}
+    
