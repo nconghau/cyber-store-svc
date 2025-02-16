@@ -27,7 +27,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<bool> TryKafkaCreateOrder()
+    public async Task<bool> TryKafkaCreateOrder([FromBody] TryKafkaCreateOrderDTO dto)
     {
         var faker = new Faker("vi");
 
@@ -36,6 +36,7 @@ public class OrderController : ControllerBase
             // Create a fake order object
             var data = new OrderDTO
             {
+                PushNotify = dto.PushNotify,
                 Id = IdGenerator.GenerateId(),
                 CustomerName = faker.Name.FullName(), // Generates a Vietnamese name
                 Email = faker.Internet.Email(),

@@ -1,5 +1,10 @@
 ﻿namespace CyberStoreSVC.Models.DTOs
 {
+    public class TryKafkaCreateOrderDTO
+    {
+        public bool PushNotify { get; set; } = false;
+    }
+
     public class OrderDTO
     {
         public string? Id { get; set; }
@@ -10,6 +15,7 @@
         public required string OrderAddress { get; set; }
         public decimal TotalAmount { get; set; }
         public required List<OrderItemDTO> OrderItems { get; set; }
+        public bool PushNotify { get; set; } = false;
     }
 
     public class OrderItemDTO

@@ -2,6 +2,7 @@
 using System.Text;
 using BuildingBlocks.Application.Behaviors;
 using CyberStoreSVC.Auth;
+using CyberStoreSVC.Behaviors;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -11,7 +12,7 @@ namespace CyberStoreSVC.Services.Common
 {
     public static class CommonRegistration
 	{
-        public static IServiceCollection AddCommonServices(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddCommonServices(this IServiceCollection services, IConfiguration configuration, ILoggingBuilder logging)
         {
             var key = Encoding.ASCII.GetBytes($"AuthFilterToken::{configuration["AuthFilterToken"]}");
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -28,6 +29,7 @@ namespace CyberStoreSVC.Services.Common
                         ClockSkew = TimeSpan.Zero
                     };
                 });
+
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(op =>
             {
@@ -57,7 +59,11 @@ namespace CyberStoreSVC.Services.Common
                     });
             });
             services.AddControllers();
-            services.AddHttpClient();
+
+            logging.AddFilter("System.Net.Http.HttpClient", LogLevel.None);
+            services.AddTransient<CustomHttpLoggingHandler>();
+            services.AddHttpClient("HTTP_OUT")
+                    .AddHttpMessageHandler<CustomHttpLoggingHandler>();
 
             services.AddMediatR(conf =>
             {

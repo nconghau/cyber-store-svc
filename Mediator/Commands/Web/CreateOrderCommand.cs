@@ -133,10 +133,13 @@ namespace CyberStoreSVC.Mediator.Commands.Web
                 message.AppendLine("=========================");
 
                 // Send message
-                _ = _mediator.Send(new SendTextMessageTelegramBotCommand()
+                if (request.Data.PushNotify)
                 {
-                    Message = message.ToString()
-                });
+                    _ = _mediator.Send(new SendTextMessageTelegramBotCommand()
+                    {
+                        Message = message.ToString()
+                    });
+                }
 
                 response.Success = true;
                 response.Data = request.Data;
