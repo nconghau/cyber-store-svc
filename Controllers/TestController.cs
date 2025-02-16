@@ -15,6 +15,6 @@ public class TestController : ControllerBase
     [HttpPost]
     public async Task<string> Ping()
     {
-        return "Pong pong!";
+        return "Pong!!";
     }
 }
