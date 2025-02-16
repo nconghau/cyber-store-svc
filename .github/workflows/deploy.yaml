@@ -20,20 +20,14 @@ jobs:
       - name: Build Docker image (for -dev)
         if: contains(env.IMAGE_TAG, '-dev')
         run: |
-          docker buildx create --use
           docker buildx build --platform linux/amd64 -t haucoder/cyber-store-svc:${{ env.IMAGE_TAG }} .
 
       - name: Build Docker images (for -prod and latest)
         if: contains(env.IMAGE_TAG, '-prod')
         run: |
-          docker buildx create --use
-          docker buildx build --platform linux/amd64 -t haucoder/cyber-store-svc:${{ env.IMAGE_TAG }} -t haucoder/cyber-store-svc:latest .
+          docker buildx build --platform linux/amd64 -t haucoder/cyber-store-svc:${{ env.IMAGE_TAG }} .
 
       - name: Push image to Docker Hub
         run: |
-          echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u haucoder --password-stdin
+          docker login -u haucoder -p ${{ secrets.DOCKER_HUB_TOKEN }}
           docker push haucoder/cyber-store-svc:${{ env.IMAGE_TAG }}
-
-      - name: Push latest image (only for -prod)
-        if: contains(env.IMAGE_TAG, '-prod')
-        run: docker push haucoder/cyber-store-svc:latest
