@@ -3,6 +3,7 @@ using CyberStoreSVC.Models.Common;
 using CyberStoreSVC.Models.Entities;
 using CyberStoreSVC.Repository;
 using CyberStoreSVC.Services.Cache;
+using CyberStoreSVC.Utils;
 using MediatR;
 
 namespace CyberStoreSVC.Mediator.Queries.Web
@@ -35,7 +36,8 @@ namespace CyberStoreSVC.Mediator.Queries.Web
 
             if (cacheValues?.Count() > 0)
             {
-                request.Query.Criteria = new List<PostgresCriteria>()
+                var newRequest = request.CloneJson();
+                newRequest.Query.Criteria = new List<PostgresCriteria>()
                 {
                     new PostgresCriteria()
                     {
