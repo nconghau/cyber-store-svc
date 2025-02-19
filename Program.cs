@@ -32,6 +32,20 @@ builder.Services.AddRedisServices();
 builder.Services.AddGoogleDiagnosticsServices();
 builder.Services.AddTelegramBotServices();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("default",
+        policy =>
+        {
+            policy.WithOrigins(
+                "http://localhost:4000",
+                "https://localhost:4000"
+                ) 
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 // use app 
 var app = builder.Build();
 
@@ -42,6 +56,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
+app.UseCors("default");
 
 DatabaseMigrationService.ApplyMigrations(app.Services);
 if (!scriptMigrationPostgres)

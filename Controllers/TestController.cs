@@ -12,7 +12,7 @@ public class TestController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost]
+    [HttpGet]
     public async Task<string> Ping()
     {
         return "Pong!!";
