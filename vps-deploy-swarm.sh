@@ -33,3 +33,4 @@ docker network ls
 
 echo "✅ Deployment complete..."
 
+v
