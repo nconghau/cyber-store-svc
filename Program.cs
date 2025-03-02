@@ -38,16 +38,25 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins(
-                "http://localhost:4000",
-                "https://localhost:4000",
+                
                 "http://localhost:3000",
+                "http://localhost:4000",
                 "https://localhost:3000",
-                "https://localhost:3000",
+                "https://localhost:4000",
+
                 "http://14.225.204.163:3000",
-                "http://14.225.204.163:4000"
+                "http://14.225.204.163:4000",
+                "https://14.225.204.163:3000",
+                "https://14.225.204.163:4000",
+
+                "http://cyberstore.pro.vn",
+                "http://admin.cyberstore.pro.vn",
+                "https://admin.cyberstore.pro.vn",
+                "https://cyberstore.pro.vn"
+
                 ) 
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
+                .AllowAnyHeader()
+                .AllowAnyMethod();
         });
 });
 
