@@ -51,6 +51,7 @@
     <None Remove="Behaviors\" />
     <None Remove="Auth\" />
     <None Remove="File\" />
+    <None Remove="Services\Security\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
@@ -74,5 +75,6 @@
     <Folder Include="Behaviors\" />
     <Folder Include="Auth\" />
     <Folder Include="File\" />
+    <Folder Include="Services\Security\" />
   </ItemGroup>
 </Project>
