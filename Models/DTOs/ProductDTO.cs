@@ -2,7 +2,7 @@ namespace CyberStoreSVC.Models.DTOs;
 
 public class ProductDTO
 {
-    public string Id { get; set; }
+    public string? Id { get; set; }
     public required string Name { get; set; }
     public required string ImgUrl { get; set; }
     public string ImgUrls { get; set; } = "[]";

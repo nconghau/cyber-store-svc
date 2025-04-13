@@ -60,4 +60,11 @@ public class ProductAdminController : ControllerBase
         return jsonResponse;
     }
 
+    [HttpPost]
+    public async Task<JsonResponse<Product>> CreateUpdateProduct([FromBody] CreateUpdateProductCommand command)
+    {
+        var jsonResponse = await _mediator.Send(command);
+        return jsonResponse;
+    }
+
 }

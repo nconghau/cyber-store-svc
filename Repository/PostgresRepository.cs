@@ -8,7 +8,7 @@ namespace CyberStoreSVC.Repository
     public interface IPostgresRepository<TEntity, TKey> where TEntity : class
     {
         Task<TEntity> AddAsync(TEntity entity);
-        Task UpdateAsync(TEntity entity);
+        Task<TEntity> UpdateAsync(TEntity entity);
         Task DeleteAsync(TEntity entity);
         Task DeleteAsync(Func<TEntity, bool> filter);
         Task<TEntity?> FindByIdAsync(TKey id);
@@ -39,10 +39,11 @@ namespace CyberStoreSVC.Repository
             return entity;
         }
 
-        public async Task UpdateAsync(TEntity entity)
+        public async Task<TEntity> UpdateAsync(TEntity entity)
         {
             _dbSet.Update(entity);
             await _context.SaveChangesAsync();
+            return entity;
         }
 
         public async Task DeleteAsync(TEntity entity)
