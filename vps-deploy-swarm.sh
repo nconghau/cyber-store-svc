@@ -9,7 +9,7 @@ if [ -z "$SVC_VERSION" ]; then
 fi
 
 if [ -z "$NUM_INSTANCES" ]; then
-  NUM_INSTANCES=1  # Default to 1 instance if not provided
+  NUM_INSTANCES=2  # Default to 2 instance if not provided
 fi
 
 echo "✅ Exporting SVC_VERSION=$SVC_VERSION"
