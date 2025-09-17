@@ -1,35 +1,29 @@
 #!/bin/bash
 
-# Load environment variables from .env file
-if [ -f .env ]; then
-  echo "✅ Loading environment variables from .env file..."
-  set -a
-  source .env
-  set +a
-else
-  echo "❌ ERROR: .env file not found!"
+SVC_VERSION=$1
+NUM_INSTANCES=$2
+
+if [ -z "$SVC_VERSION" ]; then
+  echo "❌ ERROR: Missing SVC_VERSION. Usage: ./vps-scale-swarm.sh <SVC_VERSION> <NUM_INSTANCES>"
   exit 1
 fi
 
-SVC_VERSION=$1
-
-if [ -z "$SVC_VERSION" ]; then
-  echo "❌ ERROR: Missing SVC_VERSION. Usage: ./vps-deploy-swarm.sh <SVC_VERSION>"
-  exit 1
+if [ -z "$NUM_INSTANCES" ]; then
+  NUM_INSTANCES=2  # Default to 2 instance if not provided
 fi
 
 echo "✅ Exporting SVC_VERSION=$SVC_VERSION"
 export SVC_VERSION
 
-echo "🚀 Deploying stack..."
+# Optionally, redeploy the stack (if needed) or assume it's already deployed
+echo "🚀 Deploying stack (if not already deployed)..."
 docker stack deploy -c docker-swarm.yml svc
 
 echo "✅ Waiting for services to initialize..."
 sleep 5
+
+echo "✅ Scaling svc_cyber-store-svc to $NUM_INSTANCES instances..."
+docker service scale svc_cyber-store-svc=$NUM_INSTANCES
+
+echo "✅ Deployment and scaling complete..."
 docker service ls
-
-echo "✅ Networks:"
-docker network ls
-
-echo "✅ Deployment complete..."
-

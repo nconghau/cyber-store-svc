@@ -40,4 +40,19 @@ public static class ProductMappings
             Properties = dto.Properties,
         };
     }
+
+    public static void UpdateWithDto(this Product entity, ProductDTO dto)
+    {
+        entity.Name = dto.Name;
+        entity.ImgUrl = dto.ImgUrl;
+        entity.ImgUrls = dto.ImgUrls;
+        entity.Price = dto.Price;
+        entity.DiscountedPrice = dto.DiscountedPrice;
+        entity.Tags = dto.Tags;
+        entity.Brand = dto.Brand;
+        entity.ShortDescription = dto.ShortDescription;
+        entity.Description = dto.Description;
+        entity.Properties = dto.Properties;
+    }
+
 }

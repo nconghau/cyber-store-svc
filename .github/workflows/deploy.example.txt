@@ -1,0 +1,12 @@
+🏷️ Check tags
+git tag
+
+🚀 Deploying new versions:
+git tag 1.2.2-prod && git push origin 1.2.2-prod  # 🚀 Deploy version 1.2.2
+git tag 1.2.3-prod && git push origin 1.2.3-prod  # 🚀 Deploy version 1.2.3
+
+⏪ Reverting to previous version:
+git tag 1.2.2-prod-revert && git push origin 1.2.2-prod-revert  # ⏪ Rollback to 1.2.2-prod
+
+📈 Scaling up the deployment:
+git tag 1.2.2-prod-scale-10 && git push origin 1.2.2-prod-scale-10  # 📈 Scale to 10 instances

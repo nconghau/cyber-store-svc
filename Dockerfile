@@ -37,5 +37,8 @@ ENV ASPNETCORE_URLS="http://+:7295"
 # Expose port 7295
 EXPOSE 7295
 
+# Add HEALTHCHECK for zero-downtime
+HEALTHCHECK CMD curl -f http://localhost:7295/api/test/ping || true
+
 # Set the entry point
 ENTRYPOINT ["dotnet", "CyberStoreSVC.dll"]

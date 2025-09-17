@@ -7,21 +7,32 @@ services:
       - .env 
     environment:
       - ASPNETCORE_URLS=http://+:7295
+    # ports:
+    #   - "7295:7295"
     ports:
-      - "7295:7295"
+      - target: 7295
+        published: 7295
+        protocol: tcp
+        mode: ingress
     networks:
       - db
       - kafka
       - redis
     deploy:
       replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+        failure_action: rollback
       restart_policy:
-        condition: any
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
       resources:
         limits:
           cpus: "1.5"
           memory: "1.5g"
-
 networks:
   db:
     driver: overlay
