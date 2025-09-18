@@ -20,13 +20,13 @@ RUN dotnet publish "CyberStoreSVC.csproj" -c Release -o /app/publish
 
 # Set environment variables for the container
 ENV ASPNETCORE_ENVIRONMENT=Development \
-    PostgresConnection="Host=14.225.204.163;Port=5332;Database=cyber_store;Username=cyber_store;Password=cyber_store" \
+    PostgresConnection="PostgresConnection" \
     KafkaBroker="14.225.204.163:9092" \
     KafkaTopic="k_order_2" \
     KafkaNumPartitions="4" \
     KafkaNumConsumers="4" \
     KafkaGroupId="k_order_2_groupId" \
-    AuthFilterToken="token-nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCokUihg-staging" \
+    AuthFilterToken="AuthFilterToken" \
     ASPNETCORE_URLS="http://+:7295"
 
 # TestLocal::Expose port 7295
