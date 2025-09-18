@@ -12,8 +12,8 @@
         "KafkaNumPartitions": "4",
         "KafkaNumConsumers": "4",
         "KafkaGroupId": "k_order_2_groupId",
-        "PostgresConnection": "Host=14.225.204.163;Port=5332;Database=cyber_store;Username=cyber_store;Password=cyber_store",
-        "AuthFilterToken": "token-nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCokUihg-staging"
+        "PostgresConnection": "PostgresConnection",
+        "AuthFilterToken": "AuthFilterToken"
       },
       "dotnetRunMessages": true
     },
@@ -29,8 +29,8 @@
         "KafkaNumPartitions": "4",
         "KafkaNumConsumers": "4",
         "KafkaGroupId": "k_order_2_groupId",
-        "PostgresConnection": "Host=14.225.204.163;Port=5332;Database=cyber_store;Username=cyber_store;Password=cyber_store",
-        "AuthFilterToken": "token-nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCokUihg-staging"
+        "PostgresConnection": "PostgresConnection",
+        "AuthFilterToken": "AuthFilterToken"
       },
       "dotnetRunMessages": true
     },
@@ -45,8 +45,8 @@
         "KafkaNumPartitions": "4",
         "KafkaNumConsumers": "4",
         "KafkaGroupId": "k_order_2_groupId",
-        "PostgresConnection": "Host=14.225.204.163;Port=5332;Database=cyber_store;Username=cyber_store;Password=cyber_store",
-        "AuthFilterToken": "token-nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCokUihg-staging"
+        "PostgresConnection": "PostgresConnection",
+        "AuthFilterToken": "AuthFilterToken"
       }
     }
   }

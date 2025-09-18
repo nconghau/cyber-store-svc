@@ -4,7 +4,7 @@ namespace CyberStoreSVC.Services.TelegramBot
 {
     public static class TelegramBotRegistration
 	{
-        private static readonly string telegramBotToken = "7943487167:AAEVML1jEvj-lB2--try2QJfW0xiGp531xY";
+        private static readonly string telegramBotToken = "telegramBotToken";
         public static IServiceCollection AddTelegramBotServices(this IServiceCollection services)
         {
             services.AddSingleton<ITelegramBotClient>(new TelegramBotClient(telegramBotToken));
