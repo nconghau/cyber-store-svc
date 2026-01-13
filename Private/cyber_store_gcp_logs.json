@@ -1,13 +1,13 @@
 {
   "type": "service_account",
-  "project_id": "poised-conduit-450311-j7",
-  "private_key_id": "1573c4d0ded95094bd86a4e26644df0c19604bb9",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCokUihg+0jy5/m\nlN+0xJNyvnDgBzyz//YEM677DiBZgGZLa0umkvBzxXdDO2T1v6FfvDCD0dPqZDe4\ngXCTJKPjwo6IcfGW7sSUaZULc6xwMx8GiS55hmnagndEmkK9e3nUA2PQNE+Rg/fu\ndkCS28jo7kT6LxLcTw1SN3lCXCC90s/Lf5/rY/mla/t82VJhgiHus6MR96N/vpNk\nrQ+sKdl+KdVg1b+svwuncXhEYEEPsKQ6KZTrCEBrSUNutBffvS6b9Q1MlG1X0U1K\nmQ3A0iEyTqNdBaTOeJ9KSVNJiQEwLEJKBjQFhG4GvR6rez4Jn5rqi99G7mjwqeVK\n97OqEogvAgMBAAECggEALo9ilmpQOBDoa9I3MEET0R/VIaweEkHi/CoibOnr+YzD\ntJVAYhQ4ImIqnQFs04xI0J60b9SnShjAY1AtfhcixahZokqGxn/RAIVhS7Z5rMwS\nB8YgdiSwXFCpDOPnB1txvSPqj/nC+JiRBObY0zet+NjHaKtT9FJJhaoY7kFwMb30\nDxlPl0cBjZBmWH5szuJJeb3E5a5gz1SR78G0zEqtqFPF2G4RZ/bgL7nDJOhhOMXs\nDJ+KAcngiTBu3hJb3r7HjNXre6mmSUFS4hz+wrlWcIl6ebN+NA9EdDYzFJww3btd\n7OMm0F5SVzkTbizFevSTbSXB0BTXG1azuaxheXcioQKBgQDaAdoV/RornB6TXKAW\n00q6wV2EXJgNiRCFLX1gojWW2Z92aUbdsk9R7zd/F3z1GJ3z2HgvBe/AAl2ZjuaW\nOoue+krLPGOuZgf8qJ/1Rr+Hk90OSDnGWZ27TQ2zOHYKNr/2JasSPS3N+GZ3Zy3u\n3J/wLhABun4XdAbdkCKjXQzJaQKBgQDF8bv1WIPjhjS3R9a6j6v0/la7sYI6GcoR\nNYXF3T6JBx5vpt1YZ1OUoW4d9qyCK2krm6cttCpt3l76MbJFBEaZrYYMwOTU9w2B\nkoDY5eP4p86Q/du83Heplvn1nWbypd5Jl8S4kn9fZ6PNqLU67ZzzJcwfT8KNRu2L\nPvI1WvU51wKBgC8UYU2IWEN8tpmqUiQ7wxKruY9hE7EwnXG1TjM1NI98NdSzjYtI\n+5o9J+X5Y5HmnA3R/Lpi9NCpch88Xg2pXQebE9XqF7jM7gKhQ9ILUkdsJjv0Ww27\nwrV1QXUnx04TXsdAgT4yGhc2AqLclG3WFXAf8nL9HEfiVa05eFGBQcapAoGARAYw\n673BhV1HnHzJpE9fbtBBCjuUX1chhAx6rma76OdTZFdZ1dmcdYWMjCuLWSiF+gCB\n0UkLE7rJtP2DIAi6InHpkVRwz2cfcxnfwaovT/KLIHS9IQg670L9H5U6HcU2wN+x\nMSTXNPgu6KxDq76go0aoAVKtr1Niqum03vUlNP0CgYEA12aRkNtxstt+e7/RYuhK\nkIbgXg8Dfj5lr0+aRPLMltJhTQYZbABnz1ChV7aPlZUvG1xqSFhKY8DB4ealLzK6\nPa2pCAvAfH5i1Nr4E5NRBbcp07MEN3/FrSE5B/j8qBG7xZPqgfN4XBDPmTPVwEWg\n1H08e2WQT6BAXQpF1RJJH0o=\n-----END PRIVATE KEY-----\n",
-  "client_email": "hau-logs-2025@poised-conduit-450311-j7.iam.gserviceaccount.com",
-  "client_id": "104130640137334505621",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/hau-logs-2025%40poised-conduit-450311-j7.iam.gserviceaccount.com",
+  "project_id": "xxx",
+  "private_key_id": "xxx",
+  "private_key": "xxx",
+  "client_email": "xxx",
+  "client_id": "xxx",
+  "auth_uri": "xxx",
+  "token_uri": "xxx",
+  "auth_provider_x509_cert_url": "xxx",
+  "client_x509_cert_url": "xxx",
   "universe_domain": "googleapis.com"
 }
